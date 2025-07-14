@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/currentUserInfo")
-    public ResponseEntity<BaseResponseDto<?>>  getCurrentUserInfo(@RequestHeader("X-User-Id") String userEmail) {
+    public ResponseEntity<BaseResponseDto<?>>  getCurrentUserInfo(@RequestHeader("X-User-email") String userEmail) {
         log.info("user-backend내의 currnet userEmail : " + userEmail);
         UserDto userDto = userServiceImpl.getCurrentUserInfo(userEmail);
         if(userDto.getId() == null){
