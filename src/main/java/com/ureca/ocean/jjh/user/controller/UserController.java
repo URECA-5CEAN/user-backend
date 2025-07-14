@@ -2,7 +2,10 @@ package com.ureca.ocean.jjh.user.controller;
 
 import com.ureca.ocean.jjh.common.BaseResponseDto;
 import com.ureca.ocean.jjh.common.exception.ErrorCode;
+
+import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.UserDto;
+import com.ureca.ocean.jjh.user.dto.UserResultDto;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,12 @@ public class UserController {
         }
         log.info(userDto.getPassword());
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<BaseResponseDto<?>>  signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
+        UserResultDto userResultDto = userServiceImpl.signUp(signUpRequestDto);
+        return ResponseEntity.ok(BaseResponseDto.success(userResultDto));
     }
 
 }
