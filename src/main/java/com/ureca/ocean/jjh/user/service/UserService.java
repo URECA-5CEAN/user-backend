@@ -10,4 +10,6 @@ import org.springframework.http.ResponseEntity;
 public interface UserService {
     public UserResultDto signUp(SignUpRequestDto signUpRequestDto) ;
     public UserDto getUserByEmail(String email);
+
+    boolean getIsDupNickname(String nickname);
 }

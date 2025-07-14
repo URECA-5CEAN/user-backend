@@ -1,7 +1,5 @@
 package com.ureca.ocean.jjh.user.service.impl;
 
-import com.ureca.ocean.jjh.common.BaseResponseDto;
-
 import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.UserDto;
 import com.ureca.ocean.jjh.user.dto.UserResultDto;
@@ -12,7 +10,6 @@ import com.ureca.ocean.jjh.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +81,9 @@ public class UserServiceImpl implements UserService {
         }
 
         return userResultDto;
+    }
+    @Override
+    public boolean getIsDupNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 }
