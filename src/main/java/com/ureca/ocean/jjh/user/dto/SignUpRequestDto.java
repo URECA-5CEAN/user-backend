@@ -1,4 +1,4 @@
-package com.ureca.ocean.jjh.signup.dto;
+package com.ureca.ocean.jjh.user.dto;
 
 import com.ureca.ocean.jjh.user.entity.enums.Gender;
 import com.ureca.ocean.jjh.user.entity.enums.Membership;
@@ -17,6 +17,4 @@ public class SignUpRequestDto {
     private String email;        // nullable = false
     private String password;     // nullable = false
     private Gender gender;       // nullable = false
-    private String address;      // nullable = false
-    private Membership membership; // nullable = false
 }
