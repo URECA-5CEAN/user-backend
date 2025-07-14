@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -47,9 +50,11 @@ public class UserController {
     }
 
     @PostMapping("/currentUserInfo")
-    public ResponseEntity<BaseResponseDto<?>>  getCurrentUserInfo(@RequestHeader("X-User-email") String userEmail) {
-        log.info("user-backend내의 currnet userEmail : " + userEmail);
-        UserDto userDto = userServiceImpl.getCurrentUserInfo(userEmail);
+    public ResponseEntity<BaseResponseDto<?>>  getCurrentUserInfo(@RequestHeader("X-User-email") String encodedEmail) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend내의 currnet userEmail : {}", email);
+        log.info("user-backend내의 currnet userEmail : " + email);
+        UserDto userDto = userServiceImpl.getCurrentUserInfo(email);
         if(userDto.getId() == null){
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
         }
