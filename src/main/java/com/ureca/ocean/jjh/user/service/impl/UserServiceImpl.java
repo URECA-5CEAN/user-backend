@@ -86,4 +86,22 @@ public class UserServiceImpl implements UserService {
     public boolean getIsDupNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
+
+
+    @Override
+    public UserDto getCurrentUserInfo(String email){
+        UserDto userDto = new UserDto();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            userDto = UserDto.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .password(user.getPassword())
+                    .name(user.getName())
+                    .build();
+        }
+
+        return userDto;
+    }
 }
