@@ -35,6 +35,11 @@ public class UserController {
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
     }
 
+    @GetMapping("/isDupNickname")
+    public ResponseEntity<BaseResponseDto<?>> getIsDupNickname(@RequestParam String nickname){
+        return ResponseEntity.ok(BaseResponseDto.success(userServiceImpl.getIsDupNickname(nickname)));
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<BaseResponseDto<?>>  signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         UserResultDto userResultDto = userServiceImpl.signUp(signUpRequestDto);
