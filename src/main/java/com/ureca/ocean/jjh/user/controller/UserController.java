@@ -29,7 +29,7 @@ public class UserController {
         UserDto userDto = userServiceImpl.getUserByEmail(email);
         //email 기준으로 해당 사용자가 없을 경우
         if(userDto.getId() == null){
-            return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.INTERNAL_SERVER_ERROR));
+            return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
         }
         log.info(userDto.getPassword());
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
@@ -44,6 +44,17 @@ public class UserController {
     public ResponseEntity<BaseResponseDto<?>>  signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         UserResultDto userResultDto = userServiceImpl.signUp(signUpRequestDto);
         return ResponseEntity.ok(BaseResponseDto.success(userResultDto));
+    }
+
+    @PostMapping("/currentUserInfo")
+    public ResponseEntity<BaseResponseDto<?>>  getCurrentUserInfo(@RequestHeader("X-User-Id") String userEmail) {
+        log.info("user-backend내의 currnet userEmail : " + userEmail);
+        UserDto userDto = userServiceImpl.getCurrentUserInfo(userEmail);
+        if(userDto.getId() == null){
+            return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
+        }
+        log.info(userDto.getPassword());
+        return ResponseEntity.ok(BaseResponseDto.success(userDto));
     }
 
 }
