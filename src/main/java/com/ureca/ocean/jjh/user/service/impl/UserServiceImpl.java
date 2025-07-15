@@ -1,6 +1,6 @@
 package com.ureca.ocean.jjh.user.service.impl;
 
-import com.ureca.ocean.jjh.common.exception.ErrorCode;
+import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.exception.UserException;
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;

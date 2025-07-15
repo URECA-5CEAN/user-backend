@@ -1,4 +1,4 @@
-package com.ureca.ocean.jjh.common.exception;
+package com.ureca.ocean.jjh.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

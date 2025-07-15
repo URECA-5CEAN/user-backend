@@ -1,7 +1,7 @@
 package com.ureca.ocean.jjh.user.controller;
 
 import com.ureca.ocean.jjh.common.BaseResponseDto;
-import com.ureca.ocean.jjh.common.exception.ErrorCode;
+import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
