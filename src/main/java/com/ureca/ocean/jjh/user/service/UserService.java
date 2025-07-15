@@ -1,17 +1,13 @@
 package com.ureca.ocean.jjh.user.service;
 
-import com.ureca.ocean.jjh.common.BaseResponseDto;
-
 import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
-import com.ureca.ocean.jjh.user.dto.UserDto;
-import com.ureca.ocean.jjh.user.dto.UserResultDto;
-import org.springframework.http.ResponseEntity;
+import com.ureca.ocean.jjh.user.dto.UserResponseDto;
 
 public interface UserService {
-    public UserResultDto signUp(SignUpRequestDto signUpRequestDto) ;
-    public UserDto getUserByEmail(String email);
+    public UserResponseDto signUp(SignUpRequestDto signUpRequestDto) ;
+    public UserResponseDto getUserByEmail(String email);
 
     boolean getIsDupNickname(String nickname);
 
-    UserDto getCurrentUserInfo(String email);
+    UserResponseDto getCurrentUserInfo(String email);
 }
