@@ -1,7 +1,7 @@
 package com.ureca.ocean.jjh.user.service;
 
-import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
-import com.ureca.ocean.jjh.user.dto.UserResponseDto;
+import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
+import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 
 public interface UserService {
     public UserResponseDto signUp(SignUpRequestDto signUpRequestDto) ;

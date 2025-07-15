@@ -1,4 +1,4 @@
-package com.ureca.ocean.jjh.user.dto;
+package com.ureca.ocean.jjh.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
