@@ -1,8 +1,10 @@
 package com.ureca.ocean.jjh.user.service.impl;
 
+import com.ureca.ocean.jjh.common.exception.ErrorCode;
+
+import com.ureca.ocean.jjh.exception.UserException;
 import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
-import com.ureca.ocean.jjh.user.dto.UserDto;
-import com.ureca.ocean.jjh.user.dto.UserResultDto;
+import com.ureca.ocean.jjh.user.dto.UserResponseDto;
 import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.entity.enums.Membership;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
@@ -23,64 +25,45 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto getUserByEmail(String email) {
-        UserDto userDto = new UserDto();
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            userDto = UserDto.builder()
-                    .id(user.getId())
-                    .email(user.getEmail())
-                    .password(user.getPassword())
-                    .name(user.getName())
-                    .build();
-        }
+    public UserResponseDto getUserByEmail(String email) {
 
-        return userDto;
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
+
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .name(user.getName())
+                .build();
     }
 
     @Override
     @Transactional
-    public UserResultDto signUp(SignUpRequestDto signUpRequestDto) {
-        UserResultDto userResultDto = new UserResultDto();
-
-        try {
-            Optional<User> optionalUser = userRepository.findByEmail(signUpRequestDto.getEmail());
-
-            if( optionalUser.isPresent()  ) {
-                userResultDto.setResult("exist");
-                return userResultDto;
-            }
-
-            User user = new User();
-            log.info(signUpRequestDto.getPassword());
-            user.setName(signUpRequestDto.getName());
-            user.setEmail(signUpRequestDto.getEmail());
-            user.setAddress("initial address");
-            user.setGender(signUpRequestDto.getGender());
-            user.setMembership(Membership.우수);
-            user.setNickname(signUpRequestDto.getNickname());
-            String encodedPassword = passwordEncoder.encode(signUpRequestDto.getPassword());
-            user.setPassword(encodedPassword);
-
-            User savedUser = userRepository.save(user);
-            userResultDto.setResult("success");
-
-            userResultDto.setUserDto(
-                    UserDto.builder()
-                            .id(savedUser.getId())
-                            .name(savedUser.getName())
-                            .email(savedUser.getEmail())
-                            .password(null)  // password는 dto에서 뺌
-                            .build()
-            );
-
-        }catch( Exception e ) {
-            e.printStackTrace();
-            userResultDto.setResult("fail");
+    public UserResponseDto signUp(SignUpRequestDto signUpRequestDto) {
+        if( userRepository.findByEmail(signUpRequestDto.getEmail()).isPresent()){
+            throw new UserException(ErrorCode.USER_ALREADY_EXIST);
         }
 
-        return userResultDto;
+        User user = new User();
+        user.setName(signUpRequestDto.getName());
+        user.setEmail(signUpRequestDto.getEmail());
+        user.setAddress("initial address");
+        user.setGender(signUpRequestDto.getGender());
+        user.setMembership(Membership.우수);
+        user.setNickname(signUpRequestDto.getNickname());
+
+        String encodedPassword = passwordEncoder.encode(signUpRequestDto.getPassword());
+        user.setPassword(encodedPassword);
+
+        User savedUser = userRepository.save(user);
+
+        return UserResponseDto.builder()
+                .id(savedUser.getId())
+                .name(savedUser.getName())
+                .email(savedUser.getEmail())
+                .password(null)  // password는 dto에서 뺌
+                .build();
     }
     @Override
     public boolean getIsDupNickname(String nickname) {
@@ -89,12 +72,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto getCurrentUserInfo(String email){
-        UserDto userDto = new UserDto();
+    public UserResponseDto getCurrentUserInfo(String email){
+        UserResponseDto userDto = new UserResponseDto();
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
-            userDto = UserDto.builder()
+            userDto = UserResponseDto.builder()
                     .id(user.getId())
                     .email(user.getEmail())
                     .password(user.getPassword())

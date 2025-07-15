@@ -4,8 +4,7 @@ import com.ureca.ocean.jjh.common.BaseResponseDto;
 import com.ureca.ocean.jjh.common.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
-import com.ureca.ocean.jjh.user.dto.UserDto;
-import com.ureca.ocean.jjh.user.dto.UserResultDto;
+import com.ureca.ocean.jjh.user.dto.UserResponseDto;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> getUserByEmail(@RequestParam String email){
-        UserDto userDto = userServiceImpl.getUserByEmail(email);
+        UserResponseDto userDto = userServiceImpl.getUserByEmail(email);
         //email 기준으로 해당 사용자가 없을 경우
         if(userDto.getId() == null){
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
@@ -45,8 +44,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponseDto<?>>  signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
-        UserResultDto userResultDto = userServiceImpl.signUp(signUpRequestDto);
-        return ResponseEntity.ok(BaseResponseDto.success(userResultDto));
+        UserResponseDto userDto = userServiceImpl.signUp(signUpRequestDto);
+        return ResponseEntity.ok(BaseResponseDto.success(userDto));
     }
 
     @PostMapping("/currentUserInfo")
@@ -54,7 +53,7 @@ public class UserController {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
         log.info("user-backend내의 currnet userEmail : {}", email);
         log.info("user-backend내의 currnet userEmail : " + email);
-        UserDto userDto = userServiceImpl.getCurrentUserInfo(email);
+        UserResponseDto userDto = userServiceImpl.getCurrentUserInfo(email);
         if(userDto.getId() == null){
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
         }
