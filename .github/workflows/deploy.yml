@@ -57,10 +57,10 @@ jobs:
         run: |
           
           # 도커 이미지를 빌드합니다 (myapp.jar 포함)
-          docker build -t map-backend-builder .
+          docker build -t user-backend-builder .
 
           # 임시 컨테이너를 생성해서 내부 파일 시스템에 접근할 수 있게 합니다
-          docker create --name temp-container map-backend-builder
+          docker create --name temp-container user-backend-builder
 
           # myapp.jar 파일을 호스트로 복사합니다
           docker cp temp-container:/app/myapp.jar ./myapp.jar
