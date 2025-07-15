@@ -8,6 +8,6 @@ import java.util.List;
 //@Builder 없다.
 public class UserResultDto {
 	private String result;
-	private UserDto userDto;
-	private List<UserDto> userList;
+	private UserResponseDto userDto;
+	private List<UserResponseDto> userList;
 }
