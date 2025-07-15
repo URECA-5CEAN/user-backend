@@ -1,4 +1,4 @@
-package com.ureca.ocean.jjh.user.dto;
+package com.ureca.ocean.jjh.user.dto.request;
 
 import com.ureca.ocean.jjh.user.entity.enums.Gender;
 import com.ureca.ocean.jjh.user.entity.enums.Membership;

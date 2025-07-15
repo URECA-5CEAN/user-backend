@@ -3,8 +3,8 @@ package com.ureca.ocean.jjh.user.service.impl;
 import com.ureca.ocean.jjh.common.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.exception.UserException;
-import com.ureca.ocean.jjh.user.dto.SignUpRequestDto;
-import com.ureca.ocean.jjh.user.dto.UserResponseDto;
+import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
+import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.entity.enums.Membership;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
