@@ -2,6 +2,7 @@ package com.ureca.ocean.jjh.user.service.impl;
 
 import com.ureca.ocean.jjh.exception.ErrorCode;
 import com.ureca.ocean.jjh.exception.UserException;
+import com.ureca.ocean.jjh.user.dto.response.AttendanceListResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.AttendanceResponseDto;
 import com.ureca.ocean.jjh.user.entity.Attendance;
 import com.ureca.ocean.jjh.user.entity.User;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -43,6 +46,21 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .date(attendanceResult.getDate())
                 .build();
 
+    }
+    @Override
+    public AttendanceListResponseDto listAttendance(String email, int year, int month){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
+
+        List<Attendance> attendanceResult = attendanceRepository.findByMonthAndYear(year,month,user);
+
+        List<LocalDate> localDates = attendanceResult.stream()
+                .map(Attendance::getDate)
+                .collect(Collectors.toList());
+
+        return AttendanceListResponseDto.builder()
+                .attendance(localDates)
+                .build();
     }
 }
 
