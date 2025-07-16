@@ -1,9 +1,7 @@
 package com.ureca.ocean.jjh.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -12,6 +10,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 public class UserStatus {
 
     @Id
@@ -23,7 +22,7 @@ public class UserStatus {
     @JoinColumn(name = "id") // 외래키 이름
     private User user;
 
-    private int level;
-    private int exp;
+    private Long level;
+    private Long exp;
 
 }
