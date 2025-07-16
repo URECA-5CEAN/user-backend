@@ -4,6 +4,7 @@ import com.ureca.ocean.jjh.common.BaseResponseDto;
 import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
+import com.ureca.ocean.jjh.user.dto.request.UserStatusRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.UserStatusResponseDto;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
@@ -67,8 +68,17 @@ public class UserController {
     @GetMapping("/stat")
     public ResponseEntity<BaseResponseDto<?>>  getUserStatus(@RequestHeader("X-User-email") String encodedEmail) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend내의 currnet userEmail : " + email);
+        log.info("user-backend 내의 current userEmail : " + email);
         UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.getUserStatus(email);
+        return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
+    }
+
+
+    @PutMapping("/stat")
+    public ResponseEntity<BaseResponseDto<?>>  modifyUserStatus(@RequestHeader("X-User-email") String encodedEmail, @RequestBody UserStatusRequestDto userStatusRequestDto) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.changeUserStatus(email,userStatusRequestDto.getLevelChange(),userStatusRequestDto.getExpChange());
         return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 
