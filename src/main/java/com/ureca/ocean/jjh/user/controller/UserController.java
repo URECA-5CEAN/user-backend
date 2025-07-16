@@ -5,7 +5,9 @@ import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
+import com.ureca.ocean.jjh.user.dto.response.UserStatusResponseDto;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
+import com.ureca.ocean.jjh.user.service.impl.UserStatusServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class UserController {
     private final UserServiceImpl userServiceImpl;
+    private final UserStatusServiceImpl userStatusServiceImpl;
     @PostMapping("/health")
     public String health(){
         log.info("user health checking...");
@@ -51,7 +54,6 @@ public class UserController {
     @PostMapping("/currentUserInfo")
     public ResponseEntity<BaseResponseDto<?>>  getCurrentUserInfo(@RequestHeader("X-User-email") String encodedEmail) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend내의 currnet userEmail : {}", email);
         log.info("user-backend내의 currnet userEmail : " + email);
         UserResponseDto userDto = userServiceImpl.getCurrentUserInfo(email);
         if(userDto.getId() == null){
@@ -59,6 +61,15 @@ public class UserController {
         }
         log.info(userDto.getPassword());
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
+    }
+
+
+    @GetMapping("/stat")
+    public ResponseEntity<BaseResponseDto<?>>  getUserStatus(@RequestHeader("X-User-email") String encodedEmail) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend내의 currnet userEmail : " + email);
+        UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.getUserStatus(email);
+        return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 
 }

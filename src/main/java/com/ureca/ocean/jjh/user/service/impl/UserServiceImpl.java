@@ -64,8 +64,8 @@ public class UserServiceImpl implements UserService {
         //사용자 status 테이블 insert
         UserStatus userStatus = UserStatus.builder()
                 .user(savedUser)
-                .level(0)
-                .exp(0)
+                .level(0L)
+                .exp(0L)
                 .build();
         try{
             userStatusRepository.save(userStatus);
