@@ -5,8 +5,10 @@ import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserStatusRequestDto;
+import com.ureca.ocean.jjh.user.dto.response.AttendanceResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.UserStatusResponseDto;
+import com.ureca.ocean.jjh.user.service.impl.AttendanceServiceImpl;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
 import com.ureca.ocean.jjh.user.service.impl.UserStatusServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 public class UserController {
     private final UserServiceImpl userServiceImpl;
     private final UserStatusServiceImpl userStatusServiceImpl;
+    private final AttendanceServiceImpl attendanceServiceImpl;
     @PostMapping("/health")
     public String health(){
         log.info("user health checking...");
@@ -79,6 +82,14 @@ public class UserController {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
         log.info("user-backend 내의 current userEmail : " + email);
         UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.changeUserStatus(email,userStatusRequestDto.getLevelChange(),userStatusRequestDto.getExpChange());
+        return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
+    }
+
+    @PostMapping("/attendance")
+    public ResponseEntity<BaseResponseDto<?>>  insertAttendance(@RequestHeader("X-User-email") String encodedEmail) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        AttendanceResponseDto userStatusResponseDto = attendanceServiceImpl.insertAttendance(email);
         return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 

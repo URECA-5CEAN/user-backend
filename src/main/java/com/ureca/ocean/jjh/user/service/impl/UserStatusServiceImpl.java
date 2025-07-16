@@ -43,11 +43,6 @@ public class UserStatusServiceImpl implements UserStatusService {
         userStatusFound.setLevel(userStatusFound.getLevel()+levelChange);
         userStatusFound.setExp(userStatusFound.getExp() + expChange);
 
-//        UserStatus newUserStatus = UserStatus.builder()
-//                .user(user)
-//                .level(userStatusFound.getLevel()+levelChange)
-//                .exp(userStatusFound.getExp() + expChange)
-//                .build();
         UserStatus userStatus = userStatusRepository.save(userStatusFound);
 
         return UserStatusResponseDto.builder()
