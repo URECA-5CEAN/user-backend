@@ -31,4 +31,23 @@ public class UserStatusServiceImpl implements UserStatusService {
                 .build();
 
     }
+
+    @Override
+    public UserStatusResponseDto changeUserStatus(String email, Long levelChange, Long expChange){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
+        UserStatus userStatusFound = userStatusRepository.findById(user.getId()).orElseThrow(()->new UserException(ErrorCode.USER_STATUS_NOT_EXIST));
+        UserStatus newUserStatus = UserStatus.builder()
+                .user(user)
+                .level(userStatusFound.getLevel()+levelChange)
+                .exp(userStatusFound.getExp() + expChange)
+                .build();
+        UserStatus userStatus = userStatusRepository.save(newUserStatus);
+
+        return UserStatusResponseDto.builder()
+                .userId(userStatus.getId())
+                .exp(userStatus.getExp())
+                .level(userStatus.getLevel())
+                .build();
+    }
 }
