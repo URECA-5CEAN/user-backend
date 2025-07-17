@@ -16,15 +16,15 @@ import org.springframework.context.annotation.Configuration;
                 @Server(url = "http://15.164.81.45", description = "External server")
         },
         security = {
-                @SecurityRequirement(name = "bearerAuth")  // 👈 아래 SecurityScheme과 연결
+                @SecurityRequirement(name = "AuthorizationHeader")
         }
 )
 @SecurityScheme(
-        name = "bearerAuth",                           // 👈 Swagger UI에서 선택할 이름
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer",
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
+        name = "AuthorizationHeader",            // Swagger 내부 식별자
+        type = SecuritySchemeType.APIKEY,
+        in = SecuritySchemeIn.HEADER,
+        paramName = "Authorization"              // 👈 실제 HTTP 요청에 쓸 헤더 이름
 )
 public class SwaggerConfig {
 }
+
