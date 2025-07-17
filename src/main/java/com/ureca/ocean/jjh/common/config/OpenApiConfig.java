@@ -13,7 +13,7 @@ public class OpenApiConfig {
     @Bean
     public OpenApiCustomiser serverOpenApiCustomiser() {
         return openApi -> {
-            openApi.setServers(List.of(new Server().url("http://15.164.81.45/api/user")));
+            openApi.setServers(List.of(new Server().url("http://15.164.81.45")));
         };
     }
 }
