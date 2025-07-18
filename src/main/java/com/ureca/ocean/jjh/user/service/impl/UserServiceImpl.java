@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
@@ -102,4 +101,38 @@ public class UserServiceImpl implements UserService {
 
         return userDto;
     }
+
+
+    @Override
+    @Transactional
+    public UserResponseDto updateUserInfo(String email, String nickname, String address, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
+
+        if (nickname != null && !nickname.equals(user.getNickname())) {
+            if (userRepository.existsByNickname(nickname)) {
+                throw new UserException(ErrorCode.USER_ALREADY_EXIST);
+            }
+            user.setNickname(nickname);
+        }
+
+        if (address != null) {
+            user.setAddress(address);
+        }
+
+        if (password != null) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        User updatedUser = userRepository.save(user);
+
+        return UserResponseDto.builder()
+                .id(updatedUser.getId())
+                .email(updatedUser.getEmail())
+                .name(updatedUser.getName())
+                .password(null)  //보안상 password는 노출하지 않음
+                .build();
+    }
+
+
 }

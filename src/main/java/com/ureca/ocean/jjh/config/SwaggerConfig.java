@@ -13,17 +13,17 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(title = "User API", version = "v1"),
         servers = {
-                @Server(url = "http://15.164.81.45", description = "External server")
+                @Server(url = "http://15.164.81.45", description = "nginx address")
         },
         security = {
                 @SecurityRequirement(name = "AuthorizationHeader")
         }
 )
 @SecurityScheme(
-        name = "AuthorizationHeader",            // Swagger 내부 식별자
+        name = "AuthorizationHeader",
         type = SecuritySchemeType.APIKEY,
         in = SecuritySchemeIn.HEADER,
-        paramName = "Authorization"              // 👈 실제 HTTP 요청에 쓸 헤더 이름
+        paramName = "Authorization"
 )
 public class SwaggerConfig {
 }
