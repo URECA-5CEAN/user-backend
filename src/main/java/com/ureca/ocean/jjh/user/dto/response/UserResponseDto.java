@@ -18,7 +18,6 @@ public class UserResponseDto {
 	private UUID id;
 	private String name;
 	private String email;
-	private String password;
 	private String address;
 	private Gender gender;
 	private String title;

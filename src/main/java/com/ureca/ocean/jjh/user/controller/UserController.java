@@ -55,7 +55,6 @@ public class UserController {
         if (userDto.getId() == null) {
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
         }
-        log.info(userDto.getPassword());
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
     }
 
@@ -93,7 +92,6 @@ public class UserController {
         if (userDto.getId() == null) {
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
         }
-        log.info(userDto.getPassword());
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
     }
 
