@@ -36,8 +36,12 @@ public class UserServiceImpl implements UserService {
         return UserResponseDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .name(user.getName())
+                .address(user.getAddress())
+                .title(user.getTitle())
+                .gender(user.getGender())
+                .nickname(user.getNickname())
+                .membership(user.getMembership())
                 .build();
     }
 
@@ -74,10 +78,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return UserResponseDto.builder()
-                .id(savedUser.getId())
-                .name(savedUser.getName())
-                .email(savedUser.getEmail())
-                .password(null)  // password는 dto에서 뺌
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .address(user.getAddress())
+                .title(user.getTitle())
+                .gender(user.getGender())
+                .nickname(user.getNickname())
+                .membership(user.getMembership())
                 .build();
     }
     @Override
@@ -95,11 +103,11 @@ public class UserServiceImpl implements UserService {
             userDto = UserResponseDto.builder()
                     .id(user.getId())
                     .email(user.getEmail())
-                    .password(user.getPassword())
                     .name(user.getName())
                     .address(user.getAddress())
                     .title(user.getTitle())
                     .gender(user.getGender())
+                    .nickname(user.getNickname())
                     .membership(user.getMembership())
                     .build();
         }
