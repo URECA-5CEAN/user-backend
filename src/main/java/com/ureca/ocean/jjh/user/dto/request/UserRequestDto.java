@@ -1,6 +1,7 @@
 package com.ureca.ocean.jjh.user.dto.request;
 
 import com.ureca.ocean.jjh.user.entity.enums.Gender;
+import com.ureca.ocean.jjh.user.entity.enums.Membership;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,7 @@ public class UserRequestDto {
     private String nickname;     // nullable = false
     private String address;
     private String password;     // nullable = false
+    private String title;
+    private Membership membership;
+
 }

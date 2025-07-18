@@ -4,6 +4,7 @@ import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.exception.UserException;
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
+import com.ureca.ocean.jjh.user.dto.request.UserRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.entity.UserStatus;
@@ -96,32 +97,49 @@ public class UserServiceImpl implements UserService {
                     .email(user.getEmail())
                     .password(user.getPassword())
                     .name(user.getName())
+                    .address(user.getAddress())
+                    .title(user.getTitle())
+                    .gender(user.getGender())
+                    .membership(user.getMembership())
                     .build();
         }
 
         return userDto;
     }
 
-
     @Override
     @Transactional
-    public UserResponseDto updateUserInfo(String email, String nickname, String address, String password) {
+    public UserResponseDto updateUserInfo(String email, UserRequestDto userRequestDto) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
 
-        if (nickname != null && !nickname.equals(user.getNickname())) {
-            if (userRepository.existsByNickname(nickname)) {
+        // 닉네임 변경 시 중복 체크
+        if (userRequestDto.getNickname() != null && !userRequestDto.getNickname().equals(user.getNickname())) {
+            if (userRepository.existsByNickname(userRequestDto.getNickname())) {
                 throw new UserException(ErrorCode.USER_ALREADY_EXIST);
             }
-            user.setNickname(nickname);
+            user.setNickname(userRequestDto.getNickname());
         }
 
-        if (address != null) {
-            user.setAddress(address);
+        // 주소 변경
+        if (userRequestDto.getAddress() != null) {
+            user.setAddress(userRequestDto.getAddress());
         }
 
-        if (password != null) {
-            user.setPassword(passwordEncoder.encode(password));
+        // 비밀번호 변경 (암호화 후 저장)
+        if (userRequestDto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        }
+
+        // title 변경
+        if (userRequestDto.getTitle() != null) {
+            user.setTitle(userRequestDto.getTitle());
+        }
+
+        // membership 변경
+        if (userRequestDto.getMembership() != null) {
+
+            user.setMembership(userRequestDto.getMembership());
         }
 
         User updatedUser = userRepository.save(user);
@@ -130,7 +148,11 @@ public class UserServiceImpl implements UserService {
                 .id(updatedUser.getId())
                 .email(updatedUser.getEmail())
                 .name(updatedUser.getName())
-                .password(null)  //보안상 password는 노출하지 않음
+                .nickname(updatedUser.getNickname())    // 닉네임도 리턴하도록 추가 추천
+                .address(updatedUser.getAddress())      // 필요하면 추가
+                .title(updatedUser.getTitle())
+                .membership(updatedUser.getMembership())
+                .gender(updatedUser.getGender())
                 .build();
     }
 
