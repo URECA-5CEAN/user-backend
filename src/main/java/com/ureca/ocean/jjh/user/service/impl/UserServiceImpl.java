@@ -6,6 +6,7 @@ import com.ureca.ocean.jjh.exception.UserException;
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
+import com.ureca.ocean.jjh.user.dto.response.UserResponseDtoWithPassword;
 import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.entity.UserStatus;
 import com.ureca.ocean.jjh.user.entity.enums.Membership;
@@ -28,15 +29,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserStatusRepository userStatusRepository;
     @Override
-    public UserResponseDto getUserByEmail(String email) {
+    public UserResponseDtoWithPassword getUserByEmail(String email) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
 
-        return UserResponseDto.builder()
+        return UserResponseDtoWithPassword.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .password(user.getPassword())
                 .address(user.getAddress())
                 .title(user.getTitle())
                 .gender(user.getGender())
