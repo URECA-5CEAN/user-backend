@@ -6,10 +6,7 @@ import com.ureca.ocean.jjh.exception.ErrorCode;
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserStatusRequestDto;
-import com.ureca.ocean.jjh.user.dto.response.AttendanceListResponseDto;
-import com.ureca.ocean.jjh.user.dto.response.AttendanceResponseDto;
-import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
-import com.ureca.ocean.jjh.user.dto.response.UserStatusResponseDto;
+import com.ureca.ocean.jjh.user.dto.response.*;
 import com.ureca.ocean.jjh.user.service.impl.AttendanceServiceImpl;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
 import com.ureca.ocean.jjh.user.service.impl.UserStatusServiceImpl;
@@ -51,11 +48,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> getUserByEmail(
             @Parameter(description = "User email") @RequestParam String email) {
-        UserResponseDto userDto = userServiceImpl.getUserByEmail(email);
-        if (userDto.getId() == null) {
+        UserResponseDtoWithPassword userResponseDtoWithPassword = userServiceImpl.getUserByEmail(email);
+        if (userResponseDtoWithPassword.getId() == null) {
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
         }
-        return ResponseEntity.ok(BaseResponseDto.success(userDto));
+        return ResponseEntity.ok(BaseResponseDto.success(userResponseDtoWithPassword));
     }
 
     /**
