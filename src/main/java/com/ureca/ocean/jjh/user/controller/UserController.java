@@ -4,6 +4,7 @@ import com.ureca.ocean.jjh.common.BaseResponseDto;
 import com.ureca.ocean.jjh.exception.ErrorCode;
 
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
+import com.ureca.ocean.jjh.user.dto.request.UserRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserStatusRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.AttendanceListResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.AttendanceResponseDto;
@@ -110,4 +111,17 @@ public class UserController {
         AttendanceListResponseDto attendanceListResponseDto = attendanceServiceImpl.listAttendance(email, year, month);
         return ResponseEntity.ok(BaseResponseDto.success(attendanceListResponseDto));
     }
+
+    @PutMapping
+    public ResponseEntity<BaseResponseDto<?>> updateUserInfo(
+            @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
+            @RequestBody UserRequestDto userRequestDto
+            ) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        UserResponseDto userResponseDto = userServiceImpl.updateUserInfo(email,userRequestDto.getNickname(),userRequestDto.getAddress(),userRequestDto.getPassword());
+        return ResponseEntity.ok(BaseResponseDto.success(userResponseDto));
+    }
+
+
 }
