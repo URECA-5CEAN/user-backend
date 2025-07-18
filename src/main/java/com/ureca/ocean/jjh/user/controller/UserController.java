@@ -165,9 +165,7 @@ public class UserController {
         log.info("user-backend 내의 current userEmail : " + email);
         UserResponseDto userResponseDto = userServiceImpl.updateUserInfo(
                 email,
-                userRequestDto.getNickname(),
-                userRequestDto.getAddress(),
-                userRequestDto.getPassword());
+                userRequestDto);
         return ResponseEntity.ok(BaseResponseDto.success(userResponseDto));
     }
 }
