@@ -13,7 +13,8 @@ public enum ErrorCode {
     USER_STATUS_SAVE_FAIL(20003,"USER_STATUS_SAVE_FAIL","사용자 STATUS를 저장하는 중 오류가 발생"),
     USER_STATUS_NOT_EXIST(20004,"USER_STATUS_NOT_EXIST","해당 사용자 STATUS가 존재하지 않습니다."),
     ATTENDANCE_ALREADY_DONE(20005, "ATTENDANCE_ALREADY_DONE", "이미 출석 체크 하였습니다."),
-    ENUM_NOT_PARSED(20006,"ENUM_NOT_PARSED","ENUM을 parsing할 때 오류가 발생하였습니다.");
+    ENUM_NOT_PARSED(20006,"ENUM_NOT_PARSED","ENUM을 parsing할 때 오류가 발생하였습니다."),
+    POST_NOT_FOUND(20007,"POST_NOT_FOUND","POST를 찾을 수 없습니다.");
 
     //map_backend : 30000
 

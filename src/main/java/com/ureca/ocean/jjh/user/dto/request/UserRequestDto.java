@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequestDto {
-    private String nickname;     // nullable = false
+    private String nickname;
     private String address;
-    private String password;     // nullable = false
+    private String password;
     private String title;
     private Membership membership;
 
