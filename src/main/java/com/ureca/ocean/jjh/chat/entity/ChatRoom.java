@@ -3,11 +3,16 @@ package com.ureca.ocean.jjh.chat.entity;
 import com.ureca.ocean.jjh.common.entity.BaseEntity;
 import com.ureca.ocean.jjh.community.entity.Post;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
 @Entity
+@Builder
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRoom extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -17,5 +22,5 @@ public class ChatRoom extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name= "post_id")
-    private Post postId;
+    private Post post;
 }

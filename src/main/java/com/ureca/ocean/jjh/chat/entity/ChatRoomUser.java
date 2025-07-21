@@ -6,10 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.ManyToOne;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
+@Builder
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @IdClass(ChatRoomUserId.class)
 public class ChatRoomUser {
     @Id
