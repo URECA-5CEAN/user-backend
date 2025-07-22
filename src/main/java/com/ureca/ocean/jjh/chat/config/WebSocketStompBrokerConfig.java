@@ -14,15 +14,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration                      // 설정 클래스로 지정합니다.
 @EnableWebSocketMessageBroker       // WebSocket 메시지 브로커를 활성화합니다.
 public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigurer {
+
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 클라이언트가 연결할 엔드포인트 (SockJS fallback 포함)
         registry.addEndpoint("/api/user/chat/ws")
-                .setAllowedOriginPatterns("*")
                 .withSockJS();
 
     }
 
+    //구독하는 endpoint , /topic을 구독한 사용자에게 메시지를 모두 보낸다.
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 구독(prefix) 경로 (메시지 브로커)

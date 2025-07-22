@@ -47,7 +47,7 @@
     chatDiv.scrollTop = chatDiv.scrollHeight;
   }
 
-  //connect
+  //구독(connect)
   connectBtn.onclick = function() {
     if (stompClient && stompClient.connected) {
       stompClient.disconnect();
@@ -64,7 +64,7 @@
     messageInput.disabled = false;
     sendBtn.disabled = false;
 
-    const socket = new SockJS("http://localhost:8082/api/user/chat/ws");
+    const socket = new SockJS("http://15.164.81.45/api/user/chat/ws");
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function(frame) {
