@@ -20,7 +20,6 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 클라이언트가 연결할 엔드포인트 (SockJS fallback 포함)
         registry.addEndpoint("/api/user/chat/ws")
-                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 
