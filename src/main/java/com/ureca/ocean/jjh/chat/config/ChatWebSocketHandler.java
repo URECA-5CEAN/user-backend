@@ -40,6 +40,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             System.out.println(">> " + roomId + "에 " + session.getId() + " 입장");
         } else if ("chat".equals(type)) {
             // 메시지를 해당 채팅방의 모든 세션에 브로드캐스트
+            System.out.println("broad cast");
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가
 
             for (WebSocketSession s : chatRooms.get(roomId)) {
