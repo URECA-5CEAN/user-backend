@@ -28,19 +28,25 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> payload = mapper.readValue(message.getPayload(), new TypeReference<>() {});
 
+        String type = payload.get("type");
         String roomId = payload.get("roomId");
-        String content = payload.get("content");
 
-        // 해당 채팅방에 세션 등록
-        chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
+        if ("join".equals(type)) {
+            // 채팅방에 세션만 등록하고 메시지는 보내지 않음
+            chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
+            System.out.println(">> " + roomId + "에 " + session.getId() + " 입장");
+        } else if ("chat".equals(type)) {
+            // 메시지를 해당 채팅방의 모든 세션에 브로드캐스트
+            chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가
 
-        // 해당 채팅방의 모든 세션에 메시지 브로드캐스트
-        for (WebSocketSession s : chatRooms.get(roomId)) {
-            if (s.isOpen()) {
-                s.sendMessage(new TextMessage(message.getPayload()));
+            for (WebSocketSession s : chatRooms.get(roomId)) {
+                if (s.isOpen()) {
+                    s.sendMessage(new TextMessage(message.getPayload()));
+                }
             }
         }
     }
+
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
