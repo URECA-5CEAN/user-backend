@@ -24,7 +24,7 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
         log.info("registerStompEndPoints 진입 ");
         registry.addEndpoint("/api/ws/chat")
                 .setAllowedOrigins(
-                        "http://127.0.0.1:5500"
+                        "http://127.0.0.1:55001"
                 )
 //                .setAllowedOriginPatterns("*")
                 .withSockJS();
