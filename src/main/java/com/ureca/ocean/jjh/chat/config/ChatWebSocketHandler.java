@@ -23,6 +23,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 연결 초기에는 아무 채팅방에도 소속되지 않음
+        System.out.println("afterConnectionEstablished ");
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         String type = payload.get("type");
         String roomId = payload.get("roomId");
-        log.info("type : "+ type );
+        System.out.println("type :" + type );
         if ("join".equals(type)) {
             // 채팅방에 세션만 등록하고 메시지는 보내지 않음
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
@@ -53,6 +54,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         // 세션 제거
+        System.out.println("afterConnectionClosed ");
         chatRooms.values().forEach(set -> set.remove(session));
     }
 }
