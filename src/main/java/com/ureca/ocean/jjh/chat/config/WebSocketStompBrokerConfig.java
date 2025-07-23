@@ -27,7 +27,8 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
                         "http://127.0.0.1:55001"
                 )
 //                .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .withSockJS()
+                .setSessionCookieNeeded(false);
         log.info("registerStompEndPoints 탈출 ");
     }
 
