@@ -25,7 +25,7 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
 //                        "http://localhost:5500",
 //                        "http://15.164.81.45"
 //                )
-                .setAllowedOriginPatterns("*")
+//                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 
