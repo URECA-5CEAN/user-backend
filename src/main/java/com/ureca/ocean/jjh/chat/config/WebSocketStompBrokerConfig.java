@@ -19,14 +19,14 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 클라이언트가 연결할 엔드포인트 (SockJS fallback 포함)
-        registry.addEndpoint("/api/user/chat/ws")
+        registry.addEndpoint("/api/user/chat/ws");
 //                .setAllowedOrigins(
 //                        "http://127.0.0.1:5500",
 //                        "http://localhost:5500",
 //                        "http://15.164.81.45"
 //                )
 //                .setAllowedOriginPatterns("*")
-                .withSockJS();
+
     }
 
     //구독하는 endpoint , /topic을 구독한 사용자에게 메시지를 모두 보낸다.
