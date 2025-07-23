@@ -22,10 +22,9 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 클라이언트가 연결할 엔드포인트 (SockJS fallback 포함)
         log.info("registerStompEndPoints 진입 ");
-        registry.addEndpoint("/api/user/chat/ws")
+        registry.addEndpoint("/api/ws/chat")
                 .setAllowedOrigins(
-                        "http://127.0.0.1:5500",
-                        "http://localhost:5500"
+                        "http://127.0.0.1:5500"
                 )
 //                .setAllowedOriginPatterns("*")
                 .withSockJS();
