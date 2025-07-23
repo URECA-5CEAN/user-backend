@@ -2,6 +2,7 @@ package com.ureca.ocean.jjh.chat.config;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Slf4j
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // 채팅방 ID별로 연결된 세션을 관리
@@ -30,7 +32,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         String type = payload.get("type");
         String roomId = payload.get("roomId");
-
+        log.info("type : "+ type );
         if ("join".equals(type)) {
             // 채팅방에 세션만 등록하고 메시지는 보내지 않음
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
