@@ -10,6 +10,7 @@ import com.ureca.ocean.jjh.user.repository.AttendanceRepository;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
 import com.ureca.ocean.jjh.user.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AttendanceServiceImpl implements AttendanceService {
     private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
@@ -31,6 +33,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
 
+        log.info("📌 [InsertAttendance] 오늘 날짜 (KST 기준): {}", today);
 
         if(attendanceRepository.existsByDateAndUser(today, user)){
             throw new UserException(ErrorCode.ATTENDANCE_ALREADY_DONE);
