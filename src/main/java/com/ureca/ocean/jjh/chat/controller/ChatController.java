@@ -18,6 +18,7 @@ public class ChatController {
     @SendTo("/topic/chat.room.{roomId}")
     public ChatMessage sendMessage(@DestinationVariable String roomId, ChatMessage message) {
         // roomId로 메시지 구분, 해당 방에만 브로드캐스트
+        log.info("sendMessage");
         return message;
     }
 
