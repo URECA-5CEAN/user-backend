@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+
 
         if(attendanceRepository.existsByDateAndUser(today, user)){
             throw new UserException(ErrorCode.ATTENDANCE_ALREADY_DONE);
