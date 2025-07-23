@@ -3,6 +3,7 @@ package com.ureca.ocean.jjh.chat.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -14,6 +15,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration                      // 설정 클래스로 지정합니다.
 @EnableWebSocketMessageBroker       // WebSocket 메시지 브로커를 활성화합니다.
+@EnableWebSocketSecurity
 @Slf4j
 public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
