@@ -23,7 +23,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 연결 초기에는 아무 채팅방에도 소속되지 않음
-        System.out.println("afterConnectionEstablished ");
+        String ip = session.getRemoteAddress().getAddress().getHostAddress();
+        log.info("새 연결: IP = " + ip + ", Session ID = " + session.getId());
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         } else if ("chat".equals(type)) {
             // 메시지를 해당 채팅방의 모든 세션에 브로드캐스트
             System.out.println("broad cast");
-            chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가
+            chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가 ( join 메시지를 보내지 않고, 바로 채팅메시지만 보낼 경우 )
 
             for (WebSocketSession s : chatRooms.get(roomId)) {
                 if (s.isOpen()) {

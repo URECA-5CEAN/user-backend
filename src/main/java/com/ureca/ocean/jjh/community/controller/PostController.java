@@ -1,8 +1,9 @@
 package com.ureca.ocean.jjh.community.controller;
 
 import com.ureca.ocean.jjh.common.BaseResponseDto;
-import com.ureca.ocean.jjh.community.dto.request.PostResponseDto;
-import com.ureca.ocean.jjh.community.dto.response.PostRequestDto;
+import com.ureca.ocean.jjh.community.dto.response.PostListResponseDto;
+import com.ureca.ocean.jjh.community.dto.response.PostResponseDto;
+import com.ureca.ocean.jjh.community.dto.request.PostRequestDto;
 import com.ureca.ocean.jjh.community.service.impl.PostServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user/article")
@@ -26,6 +28,13 @@ public class PostController {
         log.info("user-backend 내의 current userEmail : " + email);
         PostResponseDto postResponseDto = postServiceImpl.insertPost(email,postRequestDto);
         return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<BaseResponseDto<?>> listPost( @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria){
+        PostListResponseDto postListResponseDto = PostListResponseDto.of(postServiceImpl.listPost(pageNo, criteria));
+        return ResponseEntity.ok(BaseResponseDto.success(postListResponseDto));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.ureca.ocean.jjh.community.dto.response;
+package com.ureca.ocean.jjh.community.dto.request;
 
 import lombok.*;
 

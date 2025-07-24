@@ -1,4 +1,4 @@
-package com.ureca.ocean.jjh.community.dto.request;
+package com.ureca.ocean.jjh.community.dto.response;
 
 import com.ureca.ocean.jjh.community.entity.Post;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
