@@ -43,11 +43,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> listPost(int pageNo, String criteria){
+    public List<PostResponseDto> listPost(int pageNo, String criteria, String location){
 
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, criteria));
-        Page<PostResponseDto> page = postRepository.findAll(pageable).map(PostResponseDto::of); //of : entity->dto
 
-        return page.getContent();
+        if(location.isEmpty()){
+            return postRepository.findAll(pageable).map(PostResponseDto::of).getContent(); //of : entity->dto
+        }
+
+        return postRepository.findByLocation(pageable,location).map(PostResponseDto::of).getContent(); //of : entity->dto
     }
 }

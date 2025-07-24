@@ -8,5 +8,5 @@ import java.util.List;
 public interface PostService {
     PostResponseDto insertPost(String email, PostRequestDto postRequestDto);
 
-    List<PostResponseDto> listPost(int pageNo, String criteria);
+    List<PostResponseDto> listPost(int pageNo, String criteria, String location);
 }

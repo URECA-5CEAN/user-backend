@@ -32,8 +32,9 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> listPost( @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria){
-        PostListResponseDto postListResponseDto = PostListResponseDto.of(postServiceImpl.listPost(pageNo, criteria));
+                                                        @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria,
+                                                        @RequestParam(required = false, defaultValue = "", value = "location") String location){
+        PostListResponseDto postListResponseDto = PostListResponseDto.of(postServiceImpl.listPost(pageNo, criteria,location));
         return ResponseEntity.ok(BaseResponseDto.success(postListResponseDto));
     }
 
