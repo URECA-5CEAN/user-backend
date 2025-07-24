@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+
     @Override
     @Transactional
     public UserResponseDto signUp(SignUpRequestDto signUpRequestDto) {
@@ -95,7 +96,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-
+    @Override
+    public boolean getIsDupEmail(String email) { return userRepository.existsByEmail(email); }
     @Override
     public UserResponseDto getCurrentUserInfo(String email){
         UserResponseDto userDto = new UserResponseDto();

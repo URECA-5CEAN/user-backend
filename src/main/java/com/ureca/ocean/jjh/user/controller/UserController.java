@@ -66,6 +66,16 @@ public class UserController {
     }
 
     /**
+     * Check if email is duplicated
+     */
+    @Operation(summary = "Check duplicate nickname")
+    @GetMapping("/isDupEmail")
+    public ResponseEntity<BaseResponseDto<?>> getIsDupEmail(
+            @Parameter(description = "Email to check") @RequestParam String email) {
+        return ResponseEntity.ok(BaseResponseDto.success(userServiceImpl.getIsDupEmail(email)));
+    }
+
+    /**
      * User sign up
      */
     @Operation(summary = "User sign up")
