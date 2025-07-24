@@ -12,7 +12,6 @@ import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,6 +35,7 @@ public class PostServiceImpl implements PostService {
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
                         .author(user)
+                        .location(User.getDong(user.getAddress()))
                         .build();
 
         Post newPost = postRepository.save(post);
@@ -52,5 +52,10 @@ public class PostServiceImpl implements PostService {
         }
 
         return postRepository.findByLocation(pageable,location).map(PostResponseDto::of).getContent(); //of : entity->dto
+    }
+
+    @Override
+    public List<String> listLocations(){
+        return postRepository.findDistinctLocations();
     }
 }

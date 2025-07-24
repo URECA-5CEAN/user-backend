@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(signUpRequestDto.getName());
         user.setEmail(signUpRequestDto.getEmail());
-        user.setAddress("initial address");
+        user.setAddress("initial-address");
         user.setGender(signUpRequestDto.getGender());
         user.setMembership(Membership.우수);
         user.setNickname(signUpRequestDto.getNickname());

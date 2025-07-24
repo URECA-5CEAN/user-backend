@@ -9,4 +9,6 @@ public interface PostService {
     PostResponseDto insertPost(String email, PostRequestDto postRequestDto);
 
     List<PostResponseDto> listPost(int pageNo, String criteria, String location);
+
+    List<String> listLocations();
 }
