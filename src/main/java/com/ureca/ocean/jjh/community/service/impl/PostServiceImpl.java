@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,12 @@ public class PostServiceImpl implements PostService {
 
         return postRepository.findByLocation(pageable,location).map(PostResponseDto::of).getContent(); //of : entity->dto
     }
-
+    @Override
+    public PostResponseDto detailPost(UUID postId){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND));
+        return PostResponseDto.of(post);
+    }
     @Override
     public List<String> listLocations(){
         return postRepository.findDistinctLocations();

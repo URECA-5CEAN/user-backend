@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user/article")
@@ -61,10 +62,16 @@ public class PostController {
             @Parameter(description = "정렬 기준 (createdAt, likeCount 등)", example = "createdAt")
             @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria,
 
-            @Parameter(description = "지역 필터", example = "서울")
+            @Parameter(description = "지역 필터", example = "initial-address")
             @RequestParam(required = false, defaultValue = "", value = "location") String location) {
 
         PostListResponseDto postListResponseDto = PostListResponseDto.of(postServiceImpl.listPost(pageNo, criteria, location));
         return ResponseEntity.ok(BaseResponseDto.success(postListResponseDto));
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<BaseResponseDto<?>> detailPost(@RequestParam UUID postId) {
+        PostResponseDto postResponseDto = postServiceImpl.detailPost(postId);
+        return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
     }
 }

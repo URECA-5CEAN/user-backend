@@ -15,6 +15,7 @@ public class PostResponseDto {
     private UUID postId;
     private String title;
     private String content;
+    private String location;
     private UserResponseDto author;
 
     public static PostResponseDto of(Post post) {
@@ -22,6 +23,7 @@ public class PostResponseDto {
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .location(post.getLocation())
                 .author(UserResponseDto.of(post.getAuthor()))
                 .build();
     }
