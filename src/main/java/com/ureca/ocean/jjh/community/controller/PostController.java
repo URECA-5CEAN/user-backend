@@ -26,7 +26,7 @@ public class PostController {
 
     private final PostServiceImpl postServiceImpl;
 
-    @Operation(summary = "게시글 작성", description = "사용자가 게시글을 작성합니다.")
+    @Operation(summary = "게시글 작성", description = "사용자가 게시글을 작성합니다. 글의 주소는 사용자 정보에서 가져와서 등록합니다. 사용자 정보 중 주소 영역에 '시-군-구-동' 이렇게 넣었다고 가정할 때, '동' (즉, 마지막 단어)을 가져와서 글의 위치로 등록하고 있습니다. ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 작성 성공"),
     })
@@ -50,27 +50,30 @@ public class PostController {
         return ResponseEntity.ok(BaseResponseDto.success(postServiceImpl.listLocations()));
     }
 
-    @Operation(summary = "게시글 목록 조회", description = "전체 게시글 목록을 페이지네이션과 정렬 기준, 위치 필터로 조회합니다. paramter 아무것도 없으면 전체 조회, 필요한것만 넣으시면 됩니다.")
+    @Operation(summary = "게시글 목록 조회", description = "전체 게시글 목록을 페이지네이션과 정렬 기준, 위치 필터로 조회합니다.(아무것도 없으면 전체 조회입니다.  필요한것만 넣으시면 됩니다.)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공"),
     })
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> listPost(
-            @Parameter(description = "페이지 번호 (0부터 시작)", example = "0")
+            @Parameter(description = "페이지 번호 (0부터 시작), 페이지 하나당 10개씩", example = "0")
             @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
 
-            @Parameter(description = "정렬 기준 (createdAt, likeCount 등)", example = "createdAt")
+            @Parameter(description = "정렬 기준 (현재 createdAt만 지원)", example = "createdAt")
             @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria,
 
-            @Parameter(description = "지역 필터", example = "initial-address")
+            @Parameter(description = "지역 필터, 사용자 정보 중 주소 영역에 '시-군-구-동' 이렇게 넣었다고 가정할 때, '동'을 가져와서 글의 위치로 등록하고 있습니다. 만약 사용자가 회원가입 후 한번도 수정 안했다면 initial-address로 글이 작성됩니다.", example = "initial-address")
             @RequestParam(required = false, defaultValue = "", value = "location") String location) {
 
         PostListResponseDto postListResponseDto = PostListResponseDto.of(postServiceImpl.listPost(pageNo, criteria, location));
         return ResponseEntity.ok(BaseResponseDto.success(postListResponseDto));
     }
-
+    @Operation(summary = "게시글 상세 조회", description = "게시글을 id 값을 통해 상세 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+    })
     @GetMapping("/detail")
-    public ResponseEntity<BaseResponseDto<?>> detailPost(@RequestParam UUID postId) {
+    public ResponseEntity<BaseResponseDto<?>> detailPost(@Parameter(description = "글 id ", example = "aea0a1d7-b08c-4147-9e0f-f46d16709c0f") @RequestParam UUID postId) {
         PostResponseDto postResponseDto = postServiceImpl.detailPost(postId);
         return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
     }
