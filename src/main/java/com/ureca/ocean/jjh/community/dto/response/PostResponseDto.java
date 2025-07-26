@@ -4,6 +4,7 @@ import com.ureca.ocean.jjh.community.entity.Post;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -15,8 +16,15 @@ public class PostResponseDto {
     private UUID postId;
     private String title;
     private String content;
-    private String location;
+
     private UserResponseDto author;
+    private String category;
+    private String brandName;
+    private String benefitName;
+    private LocalDateTime promiseDate;
+
+    private String location;
+
 
     public static PostResponseDto of(Post post) {
         return PostResponseDto.builder()

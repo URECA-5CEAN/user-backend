@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -21,12 +22,18 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
+    private String title;
+    private String content;
+
     @ManyToOne
     @JoinColumn(name= "author_id")
     private User author;
 
-    private String title;
-    private String content;
+    private String category;
+    private UUID brandId;
+    private UUID benefitId;
+
+    private LocalDateTime promiseDate;
 
     private String location;
 
