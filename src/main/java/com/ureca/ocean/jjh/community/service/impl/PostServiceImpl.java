@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService {
 
         //동 ( 마지막 단어 ) 만 저장
         String[] words = postRequestDto.getLocation().trim().split("\\s+");
-
+        log.info(words[words.length - 1]);
         Post post = Post.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
