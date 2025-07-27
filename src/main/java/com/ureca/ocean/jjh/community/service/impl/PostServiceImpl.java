@@ -14,6 +14,7 @@ import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -36,13 +38,19 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
 
+        //brand id를 넣으면 brand name을 갖고 오기
+        String brandName=mapClient.getBrandNameById(postRequestDto.getBrandId());
+
+        //혜택 id를 넣으면 혜택 name을 갖고 오기
+        String benefitName=mapClient.getBenefitNameById(postRequestDto.getBenefitId());
+
         Post post = Post.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
                         .author(user)
                         .category(postRequestDto.getCategory())
-                        .brandId(postRequestDto.getBrandId())
-                        .benefitId(postRequestDto.getBenefitId())
+                        .brandName(brandName)
+                        .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
                         .location(User.getDong(user.getAddress()))
                         .build();
@@ -63,14 +71,7 @@ public class PostServiceImpl implements PostService {
         }
         List<PostResponseDto> listPostResponseDto = new ArrayList<>();
         for(Post post : postList){
-            //brand id를 넣으면 brand name을 갖고 오기
-            String brandName=mapClient.getBrandNameById(post.getBrandId());
-
-
-            //혜택 id를 넣으면 혜택 name을 갖고 오기
-            String benefitName=mapClient.getBenefitNameById(post.getBenefitId());
-
-
+            log.info("post 순회중 : " + post.getId());
             listPostResponseDto.add(
                     PostResponseDto.builder()
                         .postId(post.getId())
@@ -79,12 +80,11 @@ public class PostServiceImpl implements PostService {
                         .location(post.getLocation())
                         .author(UserResponseDto.of(post.getAuthor()))
                         .category(post.getCategory())
-                        .benefitName(benefitName)
-                        .brandName(brandName)
+                        .benefitName(post.getBenefitName())
+                        .brandName(post.getBrandName())
                         .promiseDate(post.getPromiseDate())
                         .build()
                     );
-
         }
 
         return listPostResponseDto;

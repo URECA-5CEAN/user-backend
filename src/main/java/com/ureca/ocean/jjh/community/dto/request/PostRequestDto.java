@@ -27,14 +27,5 @@ public class PostRequestDto {
     private LocalDateTime promiseDate;
 
     private String location;
-    public static PostRequestDto from(Post post) {
-        return PostRequestDto.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .category(post.getCategory())
-                .brandId(post.getBrandId())
-                .benefitId(post.getBenefitId())
-                .build();
-    }
 
 }

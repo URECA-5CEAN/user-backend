@@ -30,8 +30,8 @@ public class Post extends BaseEntity {
     private User author;
 
     private String category;
-    private UUID brandId;
-    private UUID benefitId;
+    private String brandName;
+    private String benefitName;
 
     private LocalDateTime promiseDate;
 
