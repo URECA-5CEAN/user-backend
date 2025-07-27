@@ -44,6 +44,9 @@ public class PostServiceImpl implements PostService {
         //혜택 id를 넣으면 혜택 name을 갖고 오기
         String benefitName=mapClient.getBenefitNameById(postRequestDto.getBenefitId());
 
+        //동 ( 마지막 단어 ) 만 저장
+        String[] words = postRequestDto.getLocation().trim().split("\\s+");
+
         Post post = Post.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
@@ -52,7 +55,7 @@ public class PostServiceImpl implements PostService {
                         .brandName(brandName)
                         .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
-                        .location(User.getDong(user.getAddress()))
+                        .location(words[words.length - 1])
                         .build();
 
         Post newPost = postRepository.save(post);
