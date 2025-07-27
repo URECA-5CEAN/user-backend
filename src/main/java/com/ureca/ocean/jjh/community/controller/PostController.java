@@ -73,7 +73,7 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
     })
     @GetMapping("/detail")
-    public ResponseEntity<BaseResponseDto<?>> detailPost(@Parameter(description = "글 id ", example = "aea0a1d7-b08c-4147-9e0f-f46d16709c0f") @RequestParam UUID postId) {
+    public ResponseEntity<BaseResponseDto<?>> detailPost(@Parameter(description = "글 id ", example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e") @RequestParam UUID postId) {
         PostResponseDto postResponseDto = postServiceImpl.detailPost(postId);
         return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
     }

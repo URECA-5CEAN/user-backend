@@ -32,6 +32,10 @@ public class PostResponseDto {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .location(post.getLocation())
+                .promiseDate(post.getPromiseDate())
+                .brandName(post.getBrandName())
+                .benefitName(post.getBenefitName())
+                .category(post.getCategory())
                 .author(UserResponseDto.of(post.getAuthor()))
                 .build();
     }

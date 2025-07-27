@@ -32,22 +32,22 @@ public class UserController {
     private final AttendanceServiceImpl attendanceServiceImpl;
 
     /**
-     * Health check endpoint
+     * 서비스 상태 확인용 엔드포인트
      */
-    @Operation(summary = "User service health check")
+    @Operation(summary = "사용자 서비스 상태 확인")
     @PostMapping("/health")
     public String health() {
         log.info("user health checking...");
-        return "user health check fine";
+        return "사용자 서비스 상태 정상";
     }
 
     /**
-     * Get user info by email
+     * 이메일로 사용자 정보 조회
      */
-    @Operation(summary = "Get user info by email")
+    @Operation(summary = "이메일로 사용자 정보 조회")
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> getUserByEmail(
-            @Parameter(description = "User email") @RequestParam String email) {
+            @Parameter(description = "사용자 이메일") @RequestParam String email) {
         UserResponseDtoWithPassword userResponseDtoWithPassword = userServiceImpl.getUserByEmail(email);
         if (userResponseDtoWithPassword.getId() == null) {
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
@@ -56,45 +56,45 @@ public class UserController {
     }
 
     /**
-     * Check if nickname is duplicated
+     * 닉네임 중복 여부 확인
      */
-    @Operation(summary = "Check duplicate nickname")
+    @Operation(summary = "닉네임 중복 여부 확인")
     @GetMapping("/isDupNickname")
     public ResponseEntity<BaseResponseDto<?>> getIsDupNickname(
-            @Parameter(description = "Nickname to check") @RequestParam String nickname) {
+            @Parameter(description = "중복 확인할 닉네임") @RequestParam String nickname) {
         return ResponseEntity.ok(BaseResponseDto.success(userServiceImpl.getIsDupNickname(nickname)));
     }
 
     /**
-     * Check if email is duplicated
+     * 이메일 중복 여부 확인
      */
-    @Operation(summary = "Check duplicate nickname")
+    @Operation(summary = "이메일 중복 여부 확인")
     @GetMapping("/isDupEmail")
     public ResponseEntity<BaseResponseDto<?>> getIsDupEmail(
-            @Parameter(description = "Email to check") @RequestParam String email) {
+            @Parameter(description = "중복 확인할 이메일") @RequestParam String email) {
         return ResponseEntity.ok(BaseResponseDto.success(userServiceImpl.getIsDupEmail(email)));
     }
 
     /**
-     * User sign up
+     * 사용자 회원가입
      */
-    @Operation(summary = "User sign up")
+    @Operation(summary = "사용자 회원가입")
     @PostMapping("/signup")
     public ResponseEntity<BaseResponseDto<?>> signUp(
-            @Parameter(description = "Sign up request body") @RequestBody SignUpRequestDto signUpRequestDto) {
+            @Parameter(description = "회원가입 요청 정보") @RequestBody SignUpRequestDto signUpRequestDto) {
         UserResponseDto userDto = userServiceImpl.signUp(signUpRequestDto);
         return ResponseEntity.ok(BaseResponseDto.success(userDto));
     }
 
     /**
-     * Get current logged-in user info from header
+     * 현재 로그인한 사용자 정보 조회 (헤더에서 이메일 가져옴)
      */
-    @Operation(summary = "Get current user info")
+    @Operation(summary = "현재 로그인한 사용자 정보 조회")
     @PostMapping("/currentUserInfo")
     public ResponseEntity<BaseResponseDto<?>> getCurrentUserInfo(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend 내의 current userEmail : " + email);
+        log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         UserResponseDto userDto = userServiceImpl.getCurrentUserInfo(email);
         if (userDto.getId() == null) {
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
@@ -103,71 +103,71 @@ public class UserController {
     }
 
     /**
-     * Get user status
+     * 사용자 상태 조회
      */
-    @Operation(summary = "Get user status")
+    @Operation(summary = "사용자 상태 조회")
     @GetMapping("/stat")
     public ResponseEntity<BaseResponseDto<?>> getUserStatus(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend 내의 current userEmail : " + email);
+        log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.getUserStatus(email);
         return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 
     /**
-     * Modify user status
+     * 사용자 상태 수정
      */
-    @Operation(summary = "Modify user status")
+    @Operation(summary = "사용자 상태 수정")
     @PutMapping("/stat")
     public ResponseEntity<BaseResponseDto<?>> modifyUserStatus(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
-            @Parameter(description = "User status change request") @RequestBody UserStatusRequestDto userStatusRequestDto) {
+            @Parameter(description = "사용자 상태 변경 요청") @RequestBody UserStatusRequestDto userStatusRequestDto) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend 내의 current userEmail : " + email);
+        log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.changeUserStatus(
                 email, userStatusRequestDto.getLevelChange(), userStatusRequestDto.getExpChange());
         return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 
     /**
-     * Insert attendance record for user
+     * 출석 기록 추가
      */
-    @Operation(summary = "Insert attendance record")
+    @Operation(summary = "출석 기록 추가")
     @PostMapping("/attendance")
     public ResponseEntity<BaseResponseDto<?>> insertAttendance(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend 내의 current userEmail : " + email);
+        log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         AttendanceResponseDto userStatusResponseDto = attendanceServiceImpl.insertAttendance(email);
         return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 
     /**
-     * List attendance records by year and month
+     * 년도와 월별 출석 기록 목록 조회
      */
-    @Operation(summary = "List attendance records by year and month")
+    @Operation(summary = "년도 및 월별 출석 기록 조회")
     @GetMapping("/attendance")
     public ResponseEntity<BaseResponseDto<?>> listAttendance(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
-            @Parameter(description = "Year (ex: 2025)") @RequestParam Integer year,
-            @Parameter(description = "Month (1-12)") @RequestParam Integer month) {
+            @Parameter(description = "년도 (예: 2025)") @RequestParam Integer year,
+            @Parameter(description = "월 (1~12)") @RequestParam Integer month) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend 내의 current userEmail : " + email);
+        log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         AttendanceListResponseDto attendanceListResponseDto = attendanceServiceImpl.listAttendance(email, year, month);
         return ResponseEntity.ok(BaseResponseDto.success(attendanceListResponseDto));
     }
 
     /**
-     * Update user information
+     * 사용자 정보 수정
      */
-    @Operation(summary = "Update user information")
+    @Operation(summary = "사용자 정보 수정")
     @PutMapping
     public ResponseEntity<BaseResponseDto<?>> updateUserInfo(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
-            @Parameter(description = "User info update request") @RequestBody UserRequestDto userRequestDto) {
+            @Parameter(description = "사용자 정보 수정 요청") @RequestBody UserRequestDto userRequestDto) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
-        log.info("user-backend 내의 current userEmail : " + email);
+        log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         UserResponseDto userResponseDto = userServiceImpl.updateUserInfo(
                 email,
                 userRequestDto);
