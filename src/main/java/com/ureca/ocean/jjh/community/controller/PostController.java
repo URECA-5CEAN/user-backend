@@ -62,7 +62,7 @@ public class PostController {
             @Parameter(description = "정렬 기준 (현재 createdAt만 지원)", example = "createdAt")
             @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria,
 
-            @Parameter(description = "지역 필터, 사용자 정보 중 주소 영역에 '시-군-구-동' 이렇게 넣었다고 가정할 때, '동'을 가져와서 글의 위치로 등록하고 있습니다. 만약 사용자가 회원가입 후 한번도 수정 안했다면 initial-address로 글이 작성됩니다.", example = "initial-address")
+            @Parameter(description = "사용자의 현위치를 '시-군-구-동' 이렇게 넣었다고 가정할 때, '동'을 가져와서 글의 위치로 등록하고 있습니다.", example = "initial-address")
             @RequestParam(required = false, defaultValue = "", value = "location") String location) {
 
         PostListResponseDto postListResponseDto = PostListResponseDto.of(postServiceImpl.listPost(pageNo, criteria, location));
