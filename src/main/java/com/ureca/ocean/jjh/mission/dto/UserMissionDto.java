@@ -1,6 +1,7 @@
 package com.ureca.ocean.jjh.mission.dto;
 
 import com.ureca.ocean.jjh.mission.entity.Mission;
+import com.ureca.ocean.jjh.mission.entity.MissionCondition;
 import com.ureca.ocean.jjh.mission.entity.UserMission;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class UserMissionDto {
     private int requireValue;
 
     // UserMissions → UserMissionsDto 변환용 정적 메서드
-    public static UserMissionDto from(Mission mission, UserMission userMission) {
+    public static UserMissionDto from(Mission mission, UserMission userMission, MissionCondition missionCondition) {
         return UserMissionDto.builder()
                 .id(userMission.getId())
                 .userId(userMission.getUserId())
@@ -39,6 +40,9 @@ public class UserMissionDto {
                 .name(mission.getName())
                 .description(mission.getDescription())
                 .expReward(mission.getExpReward())
+                .missionConditionId(missionCondition.getId())
+                .requireValue(missionCondition.getRequireValue())
+                .requireValue(missionCondition.getRequireValue())
                 .build();
     }
 }
