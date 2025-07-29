@@ -11,35 +11,30 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class UserMissionDto {
-    private UUID id;
-    private UUID userId;
-
-    private boolean completed;
-    private LocalDateTime completedAt;
-    private LocalDateTime createdAt;
-
+public class MyMissionDto {
     private UUID missionId;
     private String name;
     private String description;
     private int expReward;
 
+    private boolean completed;
+    private LocalDateTime completedAt;
+    private LocalDateTime createdAt;
+
     private UUID missionConditionId;
     private String requireType;
     private int requireValue;
 
-    // UserMissions → UserMissionsDto 변환용 정적 메서드
-    public static UserMissionDto from(Mission mission, UserMission userMission, MissionCondition missionCondition) {
-        return UserMissionDto.builder()
-                .id(userMission.getId())
-                .userId(userMission.getUserId())
-                .completed(userMission.isCompleted())
-                .completedAt(userMission.getCompletedAt())
-                .createdAt(userMission.getCreatedAt())
+    // MyMissions → MyMissionsDto 변환용 정적 메서드
+    public static MyMissionDto from(Mission mission, UserMission userMission, MissionCondition missionCondition) {
+        return MyMissionDto.builder()
                 .missionId(userMission.getMission().getId())
                 .name(mission.getName())
                 .description(mission.getDescription())
                 .expReward(mission.getExpReward())
+                .completed(userMission.isCompleted())
+                .completedAt(userMission.getCompletedAt())
+                .createdAt(userMission.getCreatedAt())
                 .missionConditionId(missionCondition.getId())
                 .requireValue(missionCondition.getRequireValue())
                 .requireValue(missionCondition.getRequireValue())

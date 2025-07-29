@@ -22,7 +22,7 @@ import java.util.List;
 public class MissionController {
     private final MissionService missionService;
 
-    @Operation(summary = "모든 미션 목록 조회", description = "[개발 중] 모든 미션 목록을 가져온다.")
+    @Operation(summary = "모든 미션 목록 조회", description = "[개발완료] 모든 미션 목록을 가져온다.")
     @GetMapping("/mission")
     public ResponseEntity<BaseResponseDto<?>> getMissions() {
         List<MissionWithConditionDto> userMissionDto = missionService.getAllMissions();
@@ -32,13 +32,12 @@ public class MissionController {
 
     @Operation(summary = "내 미션 목록 조회", description = "[개발 중] 로그인 된 계정의 미션 목록을 가져온다.")
     @GetMapping("/mission/my")
-    public ResponseEntity<BaseResponseDto<?>> getMissions(
+    public ResponseEntity<BaseResponseDto<?>> getMyMissions(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail
     ) {
-//        List<UserMissionDto> userMissionDto = missionService.getAllMissions();
-//        log.info(" 내 미션 목록 조회");
-//        return ResponseEntity.ok(BaseResponseDto.success("내 미션 목록 조회 성공"));
-        return ResponseEntity.ok(BaseResponseDto.success(""));
+        List<MissionWithConditionDto> myMissions = missionService.getMyMissions(encodedEmail, true);
+        log.info("✅ 내 미션 목록 조회 완료");
+        return ResponseEntity.ok(BaseResponseDto.success(myMissions));
     }
 
     @Operation(summary = "미션 완료", description = "[개발 중] 미션 완료 처리한다.")

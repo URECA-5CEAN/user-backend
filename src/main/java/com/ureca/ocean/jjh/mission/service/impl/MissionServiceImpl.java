@@ -1,7 +1,7 @@
 package com.ureca.ocean.jjh.mission.service.impl;
 
 import com.ureca.ocean.jjh.mission.dto.MissionWithConditionDto;
-import com.ureca.ocean.jjh.mission.dto.UserMissionDto;
+import com.ureca.ocean.jjh.mission.dto.MyMissionDto;
 import com.ureca.ocean.jjh.mission.repository.MissionConditionRepository;
 import com.ureca.ocean.jjh.mission.repository.MissionRepository;
 import com.ureca.ocean.jjh.mission.service.MissionService;
@@ -23,7 +23,7 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public List<UserMissionDto> getMissionsByUserId(UUID userId) {
+    public List<MyMissionDto> getMissionsByUserId(UUID userId) {
         return List.of();
     }
 }
