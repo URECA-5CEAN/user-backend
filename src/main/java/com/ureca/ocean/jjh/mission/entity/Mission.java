@@ -26,4 +26,7 @@ public class Mission {
 
     @Column(name = "exp_reward", nullable = false)
     private int expReward;
+
+    @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
+    private List<MissionCondition> conditions;
 }

@@ -2,7 +2,6 @@ package com.ureca.ocean.jjh.mission.dto;
 
 import com.ureca.ocean.jjh.mission.entity.Mission;
 import com.ureca.ocean.jjh.mission.entity.MissionCondition;
-import com.ureca.ocean.jjh.mission.entity.UserMission;
 import lombok.Builder;
 import lombok.Data;
 
