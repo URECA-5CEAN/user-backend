@@ -14,7 +14,10 @@ public enum ErrorCode {
     USER_STATUS_NOT_EXIST(20004,"USER_STATUS_NOT_EXIST","해당 사용자 STATUS가 존재하지 않습니다."),
     ATTENDANCE_ALREADY_DONE(20005, "ATTENDANCE_ALREADY_DONE", "이미 출석 체크 하였습니다."),
     ENUM_NOT_PARSED(20006,"ENUM_NOT_PARSED","ENUM을 parsing할 때 오류가 발생하였습니다."),
-    POST_NOT_FOUND(20007,"POST_NOT_FOUND","POST를 찾을 수 없습니다.");
+    POST_NOT_FOUND(20007,"POST_NOT_FOUND","POST를 찾을 수 없습니다."),
+    NOT_FOUND_USER1(20008, "NOT_FOUND_USER1","completed 파라미터가 null입니다. true 또는 false를 지정해주세요."),
+    NOT_FOUND_USER2(20009, "NOT_FOUND_USER2","completed 값은 null일 수 없습니다."),
+    ;
 
     //map_backend : 30000
 
