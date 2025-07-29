@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "user_missions")
 public class UserMission {
     @Id
     @GeneratedValue(generator = "uuid2")

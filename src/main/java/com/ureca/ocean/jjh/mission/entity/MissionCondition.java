@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 
 @Entity
+@Table(name = "mission_conditions")
 public class MissionCondition {
     @Id
     @GeneratedValue(generator = "uuid2")
