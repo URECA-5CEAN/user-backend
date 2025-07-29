@@ -23,4 +23,10 @@ public interface MissionRepository extends JpaRepository<Mission, UUID> {
             "JOIN FETCH m.conditions c " +
             "WHERE um.userId = :userId AND (:completed IS NULL OR um.completed = :completed)")
     List<UserMission> findUserMissionsByUserIdAndCompleted(UUID userId, Boolean completed);
+
+    @Query("SELECT um FROM UserMission um " +
+           "JOIN FETCH um.mission m " +
+           "JOIN FETCH m.conditions c " +
+           "WHERE um.userId = :userId")
+    List<UserMission> findUserMissionsByUserId(UUID userId);
 }

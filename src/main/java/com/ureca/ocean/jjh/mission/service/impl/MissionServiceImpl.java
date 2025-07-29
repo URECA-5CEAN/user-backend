@@ -28,16 +28,14 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public List<MyMissionDto> getMyMissions(String email, boolean completed) {
+    public List<MyMissionDto> getMyMissions(String email, Boolean completed) {
         UUID userId = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER))
             .getId();
 
-        List<UserMission> userMissions = missionRepository.findUserMissionsByUserIdAndCompleted(userId, completed);
-
-        if (userMissions == null || userMissions.isEmpty()) {
-            throw new UserException(ErrorCode.NOT_FOUND_USER);
-        }
+        List<UserMission> userMissions = (completed == null)
+            ? missionRepository.findUserMissionsByUserId(userId)
+            : missionRepository.findUserMissionsByUserIdAndCompleted(userId, completed);
 
         return userMissions.stream()
                 .map(um -> {

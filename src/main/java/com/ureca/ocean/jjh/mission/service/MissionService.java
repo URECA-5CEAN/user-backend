@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MissionService {
     List<MissionWithConditionDto> getAllMissions();
-    List<MyMissionDto> getMyMissions(String email, boolean completed);
+    List<MyMissionDto> getMyMissions(String email, Boolean completed);
 }
