@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
-    public List<MyMissionDto> getMissionsByUserId(UUID userId) {
+    public List<MyMissionDto> getMyMissions(String email, boolean completed) {
         return List.of();
     }
 }
