@@ -1,12 +1,14 @@
 package com.ureca.ocean.jjh.mission.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Data
 @Table(name = "user_missions")
 public class UserMission {
     @Id
