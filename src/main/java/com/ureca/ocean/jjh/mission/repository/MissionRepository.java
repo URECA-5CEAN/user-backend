@@ -2,10 +2,10 @@ package com.ureca.ocean.jjh.mission.repository;
 
 import com.ureca.ocean.jjh.mission.dto.MissionWithConditionDto;
 import com.ureca.ocean.jjh.mission.entity.Mission;
+import com.ureca.ocean.jjh.mission.entity.UserMission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,4 +17,10 @@ public interface MissionRepository extends JpaRepository<Mission, UUID> {
            "mc.id, mc.requireType, mc.requireValue) " +
            "FROM Mission m JOIN MissionCondition mc ON m.id = mc.mission.id")
     List<MissionWithConditionDto> findAllWithConditions();
+
+    @Query("SELECT um FROM UserMission um " +
+            "JOIN FETCH um.mission m " +
+            "JOIN FETCH m.conditions c " +
+            "WHERE um.userId = :userId AND (:completed IS NULL OR um.completed = :completed)")
+    List<UserMission> findUserMissionsByUserIdAndCompleted(UUID userId, Boolean completed);
 }
