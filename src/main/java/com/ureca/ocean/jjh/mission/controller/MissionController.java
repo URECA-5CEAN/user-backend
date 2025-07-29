@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Mission", description = "미션 관련 API")
 @RequestMapping("api/user")
@@ -30,7 +31,7 @@ public class MissionController {
         return ResponseEntity.ok(BaseResponseDto.success(userMissions));
     }
 
-    @Operation(summary = "내 미션 목록 조회", description = "[개발 중] 로그인 된 계정의 미션 목록을 가져온다.")
+    @Operation(summary = "내 미션 목록 조회", description = "[개발완료] 로그인 된 계정의 미션 목록을 가져온다.")
     @GetMapping("/mission/my")
     public ResponseEntity<BaseResponseDto<?>> getMyMissions(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
@@ -44,8 +45,14 @@ public class MissionController {
     }
 
     @Operation(summary = "미션 완료", description = "[개발 중] 미션 완료 처리한다.")
-    @GetMapping("/mission/complete")
-    public ResponseEntity<BaseResponseDto<?>> getMissionComplete() {
-        return ResponseEntity.ok(BaseResponseDto.success(""));
+    @PatchMapping("/mission/{missionId}/complete")
+    public ResponseEntity<BaseResponseDto<?>> completeMission(
+            @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
+            @PathVariable UUID missionId
+    ) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        missionService.completeMission(email, missionId);
+        log.info("미션 완료");
+        return ResponseEntity.ok(BaseResponseDto.success("미션이 완료 처리되었습니다."));
     }
 }
