@@ -17,6 +17,8 @@ public enum ErrorCode {
     POST_NOT_FOUND(20007,"POST_NOT_FOUND","POST를 찾을 수 없습니다."),
     NOT_FOUND_USER1(20008, "NOT_FOUND_USER1","completed 파라미터가 null입니다. true 또는 false를 지정해주세요."),
     NOT_FOUND_USER2(20009, "NOT_FOUND_USER2","completed 값은 null일 수 없습니다."),
+    NOT_FOUND_MISSION(20010, "NOT_FOUND_MISSION","미션을 찾을 수 없습니다."),
+    ALREADY_COMPLETED(20011, "ALREADY_COMPLETED","이미 완료된 미션입니다."),
     ;
 
     //map_backend : 30000
