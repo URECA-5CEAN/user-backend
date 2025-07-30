@@ -7,6 +7,7 @@ import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDtoWithPassword;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -24,5 +25,5 @@ public interface UserService {
     @Transactional
     UserResponseDto updateUserInfo(String email, UserRequestDto userRequestDto);
 
-    Optional<UserAndStatusResponseDto> getUserAndStatusByEmail(String email);
+    List<UserAndStatusResponseDto> getAllUserAndStatus();
 }

@@ -9,6 +9,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserStatusRepository extends JpaRepository<UserStatus, UUID> {
-    Optional<UserStatus> findByUser(User user);
     //crud 자동 생성
 }

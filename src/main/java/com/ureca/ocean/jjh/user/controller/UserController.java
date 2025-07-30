@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -178,15 +179,13 @@ public class UserController {
     }
 
     /**
-     * Get User and Status By Email
+     * Get All Users and Status
      */
-    @Operation(summary = "Get User and Status By Email")
+    @Operation(summary = "Get All Users and Status")
     @GetMapping("status")
-    public ResponseEntity<BaseResponseDto<?>> getUserAndStatusByEmail(
-            @Parameter(description = "User email") @RequestParam String email
-    ) {
-        Optional<UserAndStatusResponseDto> userAndStatusResponse = userService.getUserAndStatusByEmail(email);
+    public ResponseEntity<BaseResponseDto<?>> getAllUsersAndStatus() {
+        List<UserAndStatusResponseDto> result = userService.getAllUserAndStatus();
 
-        return ResponseEntity.ok(BaseResponseDto.success(userAndStatusResponse));
+        return ResponseEntity.ok(BaseResponseDto.success(result));
     }
 }

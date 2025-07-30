@@ -25,6 +25,7 @@ public class UserAndStatusResponseDto {
                 .name(user.getName())
                 .nickname(user.getNickname())
                 .title(user.getTitle())
+                .level(level)
                 .build();
     }
 }
