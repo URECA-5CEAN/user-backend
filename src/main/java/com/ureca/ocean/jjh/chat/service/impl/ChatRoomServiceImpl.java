@@ -1,8 +1,11 @@
 package com.ureca.ocean.jjh.chat.service.impl;
 
+import com.ureca.ocean.jjh.chat.dto.ChatMessageDto;
+import com.ureca.ocean.jjh.chat.dto.ChatMessageDtoWithName;
 import com.ureca.ocean.jjh.chat.dto.ChatRoomResponseDto;
 import com.ureca.ocean.jjh.chat.entity.ChatRoom;
 import com.ureca.ocean.jjh.chat.entity.ChatRoomUser;
+import com.ureca.ocean.jjh.chat.repository.ChatMessageRepository;
 import com.ureca.ocean.jjh.chat.repository.ChatRoomRepository;
 import com.ureca.ocean.jjh.chat.repository.ChatRoomUserRepository;
 import com.ureca.ocean.jjh.chat.service.ChatRoomService;
@@ -16,6 +19,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,7 +30,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
+    private final ChatMessageRepository chatMessageRepository;
     @Transactional
+    @Override
     public ChatRoomResponseDto insertChatRoom(String email, UUID postId) {
 
         // 로그인한 사용자 조회
@@ -55,6 +62,22 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .user1Id(chatRoomUser.getUser().getId())
                 .user2Id(chatRoomUser2.getUser().getId())
                 .build();
+    }
+
+    @Override
+    public List<ChatMessageDtoWithName> getChatRoomMessages(UUID chatRoomId){
+        List<ChatMessageDtoWithName> chatMessageDtoWithNameList = new ArrayList<>();
+        for(ChatMessageDto chatMessageDto:  chatMessageRepository.findByChatRoomIdOrderByTimeDesc(chatRoomId)){
+            String userName = userRepository.findById(chatMessageDto.getUserId()).get().getName();
+            chatMessageDtoWithNameList.add(
+                    ChatMessageDtoWithName.builder()
+                        .userName(userName)
+                        .message(chatMessageDto.getMessage())
+                        .time(chatMessageDto.getTime())
+                        .build()
+            );
+        }
+        return chatMessageDtoWithNameList;
     }
 
 

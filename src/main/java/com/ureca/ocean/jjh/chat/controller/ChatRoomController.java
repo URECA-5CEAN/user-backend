@@ -1,7 +1,6 @@
 package com.ureca.ocean.jjh.chat.controller;
 
-import com.ureca.ocean.jjh.chat.dto.ChatRoomRequestDto;
-import com.ureca.ocean.jjh.chat.dto.ChatRoomResponseDto;
+import com.ureca.ocean.jjh.chat.dto.*;
 import com.ureca.ocean.jjh.chat.service.impl.ChatRoomServiceImpl;
 import com.ureca.ocean.jjh.common.BaseResponseDto;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user/chatRoom")
@@ -27,4 +27,12 @@ public class ChatRoomController {
         ChatRoomResponseDto ChatRoomResponseDto = chatRoomService.insertChatRoom(email, chatRoomRequestDto.getPostId());
         return ResponseEntity.ok(BaseResponseDto.success(ChatRoomResponseDto));
     }
+
+    @GetMapping
+    public ResponseEntity<BaseResponseDto<?>> getChatRoomMessages(@RequestBody ChatRoomMessageRequestDto chatRoomMessageRequestDto){
+        List<ChatMessageDtoWithName> ChatMessageDto = chatRoomService.getChatRoomMessages(chatRoomMessageRequestDto.getChatRoomId());
+        return ResponseEntity.ok(BaseResponseDto.success(ChatMessageDto));
+    }
+
+
 }
