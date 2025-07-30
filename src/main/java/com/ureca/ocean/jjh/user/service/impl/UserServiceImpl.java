@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -168,15 +169,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserAndStatusResponseDto> getUserAndStatusByEmail(String email) {
-        // user
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) throw new UserException(ErrorCode.NOT_FOUND_USER);
+    public List<UserAndStatusResponseDto> getAllUserAndStatus() {
+        // users
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) throw new UserException(ErrorCode.NOT_FOUND_USER);
 
         // user status
-        Optional<UserStatus> userStatus = userStatusRepository.findByUser(user.get());
-        if (userStatus.isEmpty()) throw new UserException(ErrorCode.USER_STATUS_SAVE_FAIL);
+        List<UserStatus> userStatuses = userStatusRepository.findAll();
+        if (userStatuses.isEmpty()) throw new UserException(ErrorCode.USER_STATUS_SAVE_FAIL);
 
-        return Optional.of(UserAndStatusResponseDto.of(user.get(), userStatus.get().getLevel().intValue()));
+        return users.stream().map(user -> {
+            UserStatus status = userStatuses.stream()
+                    .filter(us -> us.getUser().getId().equals(user.getId()))
+                    .findFirst()
+                    .orElse(UserStatus.builder().level(0L).build());
+            return UserAndStatusResponseDto.of(user, status.getLevel().intValue());
+        }).toList();
     }
 }
