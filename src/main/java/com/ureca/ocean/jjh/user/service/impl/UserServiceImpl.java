@@ -5,6 +5,7 @@ import com.ureca.ocean.jjh.exception.ErrorCode;
 import com.ureca.ocean.jjh.exception.UserException;
 import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserRequestDto;
+import com.ureca.ocean.jjh.user.dto.response.UserAndStatusResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDto;
 import com.ureca.ocean.jjh.user.dto.response.UserResponseDtoWithPassword;
 import com.ureca.ocean.jjh.user.entity.User;
@@ -168,5 +169,16 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public Optional<UserAndStatusResponseDto> getUserAndStatusByEmail(String email) {
+        // user
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) throw new UserException(ErrorCode.NOT_FOUND_USER);
 
+        // user status
+        Optional<UserStatus> userStatus = userStatusRepository.findByUser(user.get());
+        if (userStatus.isEmpty()) throw new UserException(ErrorCode.USER_STATUS_SAVE_FAIL);
+
+        return Optional.of(UserAndStatusResponseDto.of(user.get(), userStatus.get().getLevel().intValue()));
+    }
 }

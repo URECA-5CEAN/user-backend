@@ -7,6 +7,7 @@ import com.ureca.ocean.jjh.user.dto.request.SignUpRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserRequestDto;
 import com.ureca.ocean.jjh.user.dto.request.UserStatusRequestDto;
 import com.ureca.ocean.jjh.user.dto.response.*;
+import com.ureca.ocean.jjh.user.service.UserService;
 import com.ureca.ocean.jjh.user.service.impl.AttendanceServiceImpl;
 import com.ureca.ocean.jjh.user.service.impl.UserServiceImpl;
 import com.ureca.ocean.jjh.user.service.impl.UserStatusServiceImpl;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -30,6 +32,7 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
     private final UserStatusServiceImpl userStatusServiceImpl;
     private final AttendanceServiceImpl attendanceServiceImpl;
+    private final UserService userService;
 
     /**
      * 서비스 상태 확인용 엔드포인트
@@ -172,5 +175,18 @@ public class UserController {
                 email,
                 userRequestDto);
         return ResponseEntity.ok(BaseResponseDto.success(userResponseDto));
+    }
+
+    /**
+     * Get User and Status By Email
+     */
+    @Operation(summary = "Get User and Status By Email")
+    @GetMapping("status")
+    public ResponseEntity<BaseResponseDto<?>> getUserAndStatusByEmail(
+            @Parameter(description = "User email") @RequestParam String email
+    ) {
+        Optional<UserAndStatusResponseDto> userAndStatusResponse = userService.getUserAndStatusByEmail(email);
+
+        return ResponseEntity.ok(BaseResponseDto.success(userAndStatusResponse));
     }
 }
