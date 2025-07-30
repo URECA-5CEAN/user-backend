@@ -61,6 +61,34 @@ public class PostServiceImpl implements PostService {
         Post newPost = postRepository.save(post);
         return PostResponseDto.of(newPost);
     }
+
+    @Override
+    public List<PostResponseDto> getMyPost(int pageNo, String criteria, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
+        Pageable pageable = PageRequest.of(pageNo, 10, Sort.by(Sort.Direction.DESC, criteria));
+        List<Post> postList = postRepository.findByAuthor(user,pageable).getContent();
+        List<PostResponseDto> listPostResponseDto = new ArrayList<>();
+        for(Post post : postList){
+            log.info("post 순회중 : " + post.getId());
+            listPostResponseDto.add(
+                    PostResponseDto.builder()
+                            .postId(post.getId())
+                            .title(post.getTitle())
+                            .content(post.getContent())
+                            .location(post.getLocation())
+                            .author(UserResponseDto.of(post.getAuthor()))
+                            .category(post.getCategory())
+                            .benefitName(post.getBenefitName())
+                            .brandName(post.getBrandName())
+                            .promiseDate(post.getPromiseDate())
+                            .build()
+            );
+        }
+        return listPostResponseDto;
+    }
+
+
     //refactoring 필요
     @Override
     public List<PostResponseDto> listPost(int pageNo, String criteria, String location){

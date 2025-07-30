@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface PostService {
     PostResponseDto insertPost(String email, PostRequestDto postRequestDto);
 
+    List<PostResponseDto> getMyPost(int pageNo, String criteria, String email);
+
     List<PostResponseDto> listPost(int pageNo, String criteria, String location);
 
     PostResponseDto detailPost(UUID postId);

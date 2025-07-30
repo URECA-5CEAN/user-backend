@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -75,6 +76,25 @@ public class PostController {
     @GetMapping("/detail")
     public ResponseEntity<BaseResponseDto<?>> detailPost(@Parameter(description = "글 id ", example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e") @RequestParam UUID postId) {
         PostResponseDto postResponseDto = postServiceImpl.detailPost(postId);
+        return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
+    }
+
+    @Operation(summary = "게시글 상세 조회", description = "게시글을 id 값을 통해 상세 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+    })
+    @GetMapping("/myPost")
+    public ResponseEntity<BaseResponseDto<?>> getMyPost(
+            @Parameter(description = "Base64 인코딩된 사용자 이메일", hidden = true)
+            @RequestHeader("X-User-email") String encodedEmail,
+            @Parameter(description = "페이지 번호 (0부터 시작), 페이지 하나당 10개씩", example = "0")
+            @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+            @Parameter(description = "정렬 기준 (현재 createdAt만 지원)", example = "createdAt")
+            @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria
+    ) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        List<PostResponseDto> postResponseDto = postServiceImpl.getMyPost(pageNo,criteria,email);
         return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
     }
 }
