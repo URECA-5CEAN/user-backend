@@ -130,7 +130,7 @@ public class UserController {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
         log.info("user-backend 내의 현재 사용자 이메일 : " + email);
         UserStatusResponseDto userStatusResponseDto = userStatusServiceImpl.changeUserStatus(
-                email, userStatusRequestDto.getLevelChange(), userStatusRequestDto.getExpChange());
+                email, userStatusRequestDto.getExpChange());
         return ResponseEntity.ok(BaseResponseDto.success(userStatusResponseDto));
     }
 

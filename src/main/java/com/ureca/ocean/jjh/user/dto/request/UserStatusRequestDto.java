@@ -5,6 +5,5 @@ import lombok.Setter;
 
 @Getter @Setter
 public class UserStatusRequestDto {
-    private Long levelChange;
     private Long expChange;
 }

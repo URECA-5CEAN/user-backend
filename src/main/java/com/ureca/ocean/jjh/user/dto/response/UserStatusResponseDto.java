@@ -11,4 +11,5 @@ public class UserStatusResponseDto {
     private UUID userId;
     private Long level;
     private Long exp;
+    private boolean isLevelUpdated;
 }
