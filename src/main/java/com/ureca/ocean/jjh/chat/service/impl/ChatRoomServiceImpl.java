@@ -1,7 +1,7 @@
 package com.ureca.ocean.jjh.chat.service.impl;
 
 import com.ureca.ocean.jjh.chat.dto.ChatMessageDto;
-import com.ureca.ocean.jjh.chat.dto.ChatMessageDtoWithName;
+import com.ureca.ocean.jjh.chat.dto.ChatRoomMessageResponseDto;
 import com.ureca.ocean.jjh.chat.dto.ChatRoomResponseDto;
 import com.ureca.ocean.jjh.chat.entity.ChatRoom;
 import com.ureca.ocean.jjh.chat.entity.ChatRoomUser;
@@ -65,12 +65,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public List<ChatMessageDtoWithName> getChatRoomMessages(UUID chatRoomId){
-        List<ChatMessageDtoWithName> chatMessageDtoWithNameList = new ArrayList<>();
+    public List<ChatRoomMessageResponseDto> getChatRoomMessages(UUID chatRoomId){
+        List<ChatRoomMessageResponseDto> chatMessageDtoWithNameList = new ArrayList<>();
         for(ChatMessageDto chatMessageDto:  chatMessageRepository.findByChatRoomIdOrderByTimeDesc(chatRoomId)){
             String userName = userRepository.findById(chatMessageDto.getUserId()).get().getName();
             chatMessageDtoWithNameList.add(
-                    ChatMessageDtoWithName.builder()
+                    ChatRoomMessageResponseDto.builder()
                         .userName(userName)
                         .message(chatMessageDto.getMessage())
                         .time(chatMessageDto.getTime())

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user/chatRoom")
@@ -29,8 +30,8 @@ public class ChatRoomController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponseDto<?>> getChatRoomMessages(@RequestBody ChatRoomMessageRequestDto chatRoomMessageRequestDto){
-        List<ChatMessageDtoWithName> ChatMessageDto = chatRoomService.getChatRoomMessages(chatRoomMessageRequestDto.getChatRoomId());
+    public ResponseEntity<BaseResponseDto<?>> getChatRoomMessages(@RequestParam UUID chatRoomId){
+        List<ChatRoomMessageResponseDto> ChatMessageDto = chatRoomService.getChatRoomMessages(chatRoomId);
         return ResponseEntity.ok(BaseResponseDto.success(ChatMessageDto));
     }
 

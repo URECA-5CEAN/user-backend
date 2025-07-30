@@ -1,7 +1,6 @@
 package com.ureca.ocean.jjh.chat.service;
 
-import com.ureca.ocean.jjh.chat.dto.ChatMessageDto;
-import com.ureca.ocean.jjh.chat.dto.ChatMessageDtoWithName;
+import com.ureca.ocean.jjh.chat.dto.ChatRoomMessageResponseDto;
 import com.ureca.ocean.jjh.chat.dto.ChatRoomResponseDto;
 import jakarta.transaction.Transactional;
 
@@ -12,5 +11,5 @@ public interface ChatRoomService {
     @Transactional
     ChatRoomResponseDto insertChatRoom(String email, UUID postId);
 
-    List<ChatMessageDtoWithName> getChatRoomMessages(UUID chatRoomId);
+    List<ChatRoomMessageResponseDto> getChatRoomMessages(UUID chatRoomId);
 }
