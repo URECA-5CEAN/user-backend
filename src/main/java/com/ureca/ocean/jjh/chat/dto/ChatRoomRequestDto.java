@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter @Setter
 public class ChatRoomRequestDto {
 
-    @Schema(description="약속이 만들어질 post ",example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e")
+    @Schema(description="약속이 만들어질 post ",example = "4f2f5a23-42da-496e-a50e-d2b20cfb698a")
     private UUID postId;
 
 

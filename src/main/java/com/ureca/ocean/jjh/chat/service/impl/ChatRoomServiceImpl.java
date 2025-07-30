@@ -18,10 +18,10 @@ import com.ureca.ocean.jjh.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -53,14 +53,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom newChatRoom = chatRoomRepository.save(chatRoom);
 
 
-        ChatRoomUser chatRoomUser = chatRoomUserRepository.save(ChatRoomUser.builder().user(author).chatRoom(newChatRoom).build());
-        ChatRoomUser chatRoomUser2 = chatRoomUserRepository.save(ChatRoomUser.builder().user(user).chatRoom(newChatRoom).build());
+        ChatRoomUser me = chatRoomUserRepository.save(ChatRoomUser.builder().user(user).chatRoom(newChatRoom).build());
+        ChatRoomUser authorChatRoomUser = chatRoomUserRepository.save(ChatRoomUser.builder().user(author).chatRoom(newChatRoom).build());
 
 
         return ChatRoomResponseDto.builder()
-                .ChatRoomId(newChatRoom.getId())
-                .user1Id(chatRoomUser.getUser().getId())
-                .user2Id(chatRoomUser2.getUser().getId())
+                .chatRoomId(newChatRoom.getId())
+                .me(me.getUser().getId())
+                .other(authorChatRoomUser.getUser().getId())
                 .build();
     }
 
@@ -78,6 +78,38 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             );
         }
         return chatMessageDtoWithNameList;
+    }
+
+    public List<ChatRoomResponseDto> getChatRoom(String email){
+        
+        //현재 로그인한 나 찾기
+        User me = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
+        
+        
+        //나와 chatting방 목록들의 관계사항 찾아오기
+        List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findByUser(me);
+
+        //관계사항에서 가공해야할 채팅방 목록 뽑기
+        List<ChatRoom> chatRoomList = new ArrayList<>();
+        for(ChatRoomUser chatRoomUser : chatRoomUsers){
+            chatRoomList.add(chatRoomRepository.findById(chatRoomUser.getChatRoom().getId()).orElseThrow(()-> new UserException(ErrorCode.NOT_FOUND_CHATROOM)));
+        }
+        
+        //채팅방 목록에서 상대방을 구한 후에 dto로 변환하기
+        List<ChatRoomResponseDto> chatRoomResponseDtoList = new ArrayList<>();
+        for( ChatRoom chatRoom : chatRoomList){
+            //채팅방에 소속돼있지만, 내가 아닌 사용자 즉, 상대방이 누구인지 추출
+            ChatRoomUser other = chatRoomUserRepository.findByChatRoomButNotMe(chatRoom, me).orElseThrow(()-> new UserException(ErrorCode.NOT_FOUND_USER));
+            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder()
+                        .me(me.getId())
+                        .other(other.getUser().getId())
+                        .chatRoomId(chatRoom.getId())
+                        .build()
+                    );
+        }
+
+        return chatRoomResponseDtoList;
     }
 
 
