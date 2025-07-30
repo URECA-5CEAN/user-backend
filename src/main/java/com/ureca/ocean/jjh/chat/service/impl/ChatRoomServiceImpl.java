@@ -43,11 +43,22 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND));
 
+        //상대방 사용자
         User author = post.getAuthor();
 
-        Post newPost = postRepository.save(post);
+        List<ChatRoom> chatRoomsBetweenMeAndOther = chatRoomUserRepository.findByParticipants(user,author);
+        for(ChatRoom chatRoom:chatRoomsBetweenMeAndOther){
+            Post postCheck = chatRoom.getPost();
+            if(post.getId() == postCheck.getId()){
+                return ChatRoomResponseDto.builder()
+                        .chatRoomId(chatRoom.getId())
+                        .me(user.getId())
+                        .other(author.getId())
+                        .build();
+            }
+        }
         ChatRoom chatRoom = ChatRoom.builder()
-                .post(newPost)
+                .post(post)
                 .build();
 
         ChatRoom newChatRoom = chatRoomRepository.save(chatRoom);
