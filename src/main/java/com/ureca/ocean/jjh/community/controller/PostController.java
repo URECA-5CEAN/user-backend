@@ -79,7 +79,7 @@ public class PostController {
         return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
     }
 
-    @Operation(summary = "게시글 상세 조회", description = "게시글을 id 값을 통해 상세 조회합니다.")
+    @Operation(summary = "본인이 쓴 게시글 목록 조회", description = "본인이 쓴 게시글 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
     })
