@@ -3,11 +3,16 @@ package com.ureca.ocean.jjh.common;
 
 import com.ureca.ocean.jjh.exception.ErrorCode;
 import com.ureca.ocean.jjh.common.exception.ErrorResponseDto;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BaseResponseDto<T> {
 
     private Integer statusCode;
