@@ -36,12 +36,32 @@ public class UserStatusServiceImpl implements UserStatusService {
     }
 
     @Override
-    public UserStatusResponseDto changeUserStatus(String email, Long levelChange, Long expChange){
+    public UserStatusResponseDto changeUserStatus(String email, Long expChange){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
         UserStatus userStatusFound = userStatusRepository.findById(user.getId()).orElseThrow(()->new UserException(ErrorCode.USER_STATUS_NOT_EXIST));
-        userStatusFound.setLevel(userStatusFound.getLevel()+levelChange);
-        userStatusFound.setExp(userStatusFound.getExp() + expChange);
+
+        Long beforeLevel = userStatusFound.getLevel();
+
+        Long beforeExp = userStatusFound.getExp();
+        Long afterExp = beforeExp + expChange;
+
+//        Long expBound = ((beforeExp/50)+1) * 50;
+
+        boolean levelChanged = false;
+        if(afterExp == 50){
+            levelChanged = true;
+            userStatusFound.setLevel(beforeLevel+1);
+            afterExp -= 50;
+        }
+        else if(afterExp < 0){
+            levelChanged = true;
+            userStatusFound.setLevel(beforeLevel-1);
+            afterExp = afterExp+50;
+        }
+
+        userStatusFound.setExp(afterExp);
+
 
         UserStatus userStatus = userStatusRepository.save(userStatusFound);
 
@@ -49,6 +69,8 @@ public class UserStatusServiceImpl implements UserStatusService {
                 .userId(userStatus.getId())
                 .exp(userStatus.getExp())
                 .level(userStatus.getLevel())
+                .isLevelUpdated(levelChanged)
                 .build();
     }
+
 }

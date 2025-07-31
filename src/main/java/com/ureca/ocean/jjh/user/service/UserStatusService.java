@@ -5,5 +5,5 @@ import com.ureca.ocean.jjh.user.dto.response.UserStatusResponseDto;
 public interface UserStatusService {
     UserStatusResponseDto getUserStatus(String email);
 
-    UserStatusResponseDto changeUserStatus(String email, Long levelChange, Long expChange);
+    UserStatusResponseDto changeUserStatus(String email, Long expChange);
 }

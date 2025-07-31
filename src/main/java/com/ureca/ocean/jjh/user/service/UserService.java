@@ -16,6 +16,9 @@ public interface UserService {
 
     boolean getIsDupNickname(String nickname);
 
+
+    boolean getIsDupEmail(String email);
+
     UserResponseDto getCurrentUserInfo(String email);
 
 

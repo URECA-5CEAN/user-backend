@@ -7,10 +7,10 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Getter @Setter
-public class ChatRoomRequestDto {
+public class ChatRoomMessageRequestDto {
 
-    @Schema(description="약속이 만들어질 post ",example = "4f2f5a23-42da-496e-a50e-d2b20cfb698a")
-    private UUID postId;
+    @Schema(description="가져올 채팅방 id")
+    private UUID chatRoomId;
 
 
 }

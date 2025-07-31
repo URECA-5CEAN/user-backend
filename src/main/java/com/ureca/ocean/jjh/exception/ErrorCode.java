@@ -17,10 +17,12 @@ public enum ErrorCode {
     POST_NOT_FOUND(20007,"POST_NOT_FOUND","POST를 찾을 수 없습니다."),
     NOT_FOUND_USER1(20008, "NOT_FOUND_USER1","completed 파라미터가 null입니다. true 또는 false를 지정해주세요."),
     NOT_FOUND_USER2(20009, "NOT_FOUND_USER2","completed 값은 null일 수 없습니다."),
-    NOT_FOUND_MISSION(20010, "NOT_FOUND_MISSION","미션을 찾을 수 없습니다."),
-    ALREADY_COMPLETED(20011, "ALREADY_COMPLETED","이미 완료된 미션입니다."),
+    NOT_FOUND_CHATROOM(20010, "NOT_FOUND_CHATROOM","채팅방을 찾을 수 없습니다."),
+    NOT_AUTHORIZED(20011,"NOT_AUTHORIZED","글을 삭제할 권한이 없습니다."),
     ATTENDANCE_REQUIRE(200012, "ATTENDANCE_REQUIRE","출석체크가 필요합니다."),
     MISSION_NOT_COMPLETED(200013, "MISSION_NOT_COMPLETED","완료되지 않은 미션입니다."),
+    NOT_FOUND_MISSION(20014, "NOT_FOUND_MISSION","미션을 찾을 수 없습니다."),
+    ALREADY_COMPLETED(20015, "ALREADY_COMPLETED","이미 완료된 미션입니다."),
     ;
 
     //map_backend : 30000
