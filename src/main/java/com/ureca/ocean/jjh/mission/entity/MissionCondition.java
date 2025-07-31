@@ -1,5 +1,6 @@
 package com.ureca.ocean.jjh.mission.entity;
 
+import com.ureca.ocean.jjh.user.entity.Attendance;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -20,8 +21,12 @@ public class MissionCondition {
     private UUID storeUsageId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mission_id")
+    @JoinColumn(name = "mission_id", nullable = true)
     private Mission mission;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attendance_id", nullable = true)
+    private Attendance attendance;
 
     @Column(name = "require_type")
     private String requireType;
