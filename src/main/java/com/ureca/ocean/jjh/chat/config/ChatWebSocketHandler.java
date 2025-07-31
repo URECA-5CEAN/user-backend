@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ureca.ocean.jjh.chat.dto.ChatMessageDto;
 import com.ureca.ocean.jjh.chat.repository.ChatMessageRepository;
+import com.ureca.ocean.jjh.exception.ErrorCode;
+import com.ureca.ocean.jjh.exception.UserException;
 import com.ureca.ocean.jjh.user.entity.User;
+import com.ureca.ocean.jjh.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -28,7 +32,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final Map<UUID, Set<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
 //    private final Map<UUID, WebSocketSession> userSession = new ConcurrentHashMap<>();
 //    private final Map<UUID, Set<Map<UUID, WebSocketSession>>> chatRooms = new ConcurrentHashMap<>();
-
+    private final UserRepository userRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final ChatMessageRepository chatMessageRepository;
     @Override
@@ -46,7 +51,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String type = payload.get("type");
         UUID roomId = UUID.fromString(payload.get("roomId"));
         UUID userId = UUID.fromString(payload.get("sender"));
-
+        User user = userRepository.findById(userId).orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
+        String name = user.getName();
         System.out.println("type :" + type );
         if ("join".equals(type)) {
             // 채팅방에 세션만 등록하고 메시지는 보내지 않음
@@ -56,12 +62,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         } else if ("chat".equals(type)) {
             // 메시지를 해당 채팅방의 모든 세션에 브로드캐스트
             log.info("broad cast");
-
-
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가 ( join 메시지를 보내지 않고, 바로 채팅메시지만 보낼 경우 )
+
+            Map<String,String> payloadResponse = new HashMap<>();
+            payloadResponse.put("roomId", roomId.toString());
+            payloadResponse.put("sender", name);
+            payloadResponse.put("message", messageContent);
+
+            String json = objectMapper.writeValueAsString(payloadResponse);
             for (WebSocketSession s : chatRooms.get(roomId)) {
                 if (s.isOpen()) {
-                    s.sendMessage(new TextMessage(message.getPayload()));
+
+                    s.sendMessage(new TextMessage(json));
+//                    s.sendMessage(new TextMessage(message.getPayload()));
                     ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now());
                     chatMessageRepository.save(chatMessageDto);
                 }
