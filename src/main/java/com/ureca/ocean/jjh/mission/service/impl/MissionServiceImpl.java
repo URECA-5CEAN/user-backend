@@ -1,8 +1,8 @@
 package com.ureca.ocean.jjh.mission.service.impl;
 
+import com.ureca.ocean.jjh.client.MapClient;
 import com.ureca.ocean.jjh.exception.ErrorCode;
 import com.ureca.ocean.jjh.exception.UserException;
-import com.ureca.ocean.jjh.map.client.MapClient;
 import com.ureca.ocean.jjh.map.dto.StoreUsageDto;
 import com.ureca.ocean.jjh.mission.dto.MissionCompleteDto;
 import com.ureca.ocean.jjh.mission.dto.MissionWithConditionDto;
