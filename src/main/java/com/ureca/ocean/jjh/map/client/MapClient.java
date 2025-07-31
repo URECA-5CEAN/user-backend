@@ -20,7 +20,6 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-@Service
 public class MapClient {
     private final RestTemplate restTemplate;
 
