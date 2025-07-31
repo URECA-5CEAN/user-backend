@@ -1,6 +1,7 @@
 package com.ureca.ocean.jjh.mission.repository;
 
 import com.ureca.ocean.jjh.mission.dto.MissionWithConditionDto;
+import com.ureca.ocean.jjh.mission.dto.MyMissionDto;
 import com.ureca.ocean.jjh.mission.entity.Mission;
 import com.ureca.ocean.jjh.mission.entity.UserMission;
 import org.springframework.data.jpa.repository.JpaRepository;
