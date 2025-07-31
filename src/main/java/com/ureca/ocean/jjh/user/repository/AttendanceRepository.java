@@ -22,4 +22,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
     """)
     List<Attendance> findByMonthAndYear(@Param("year") int year, @Param("month") int month, @Param("user")User user);
 
+    List<Attendance> findByUserIdAndDate(UUID userId, LocalDate date);
 }
