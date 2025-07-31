@@ -16,4 +16,8 @@ public interface PostService {
     PostResponseDto detailPost(UUID postId);
 
     List<String> listLocations();
+
+    void deletePost(String email, UUID postId);
+
+    PostResponseDto updatePost(String email, UUID postId, PostRequestDto dto);
 }

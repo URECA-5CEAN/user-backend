@@ -130,4 +130,50 @@ public class PostServiceImpl implements PostService {
     public List<String> listLocations(){
         return postRepository.findDistinctLocations();
     }
+
+    @Override
+    public void deletePost(String email, UUID postId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND));
+
+        // 작성자만 삭제 가능
+        if (!post.getAuthor().getId().equals(user.getId())) {
+            throw new UserException(ErrorCode.NOT_AUTHORIZED); // 직접 정의했거나 HttpStatus.FORBIDDEN 사용 가능
+        }
+
+        postRepository.delete(post);
+    }
+
+    @Override
+    public PostResponseDto updatePost(String email, UUID postId, PostRequestDto dto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND));
+
+        if (!post.getAuthor().getId().equals(user.getId())) {
+            throw new UserException(ErrorCode.NOT_AUTHORIZED);
+        }
+
+        String brandName = mapClient.getBrandNameById(dto.getBrandId());
+        String benefitName = mapClient.getBenefitNameById(dto.getBenefitId());
+        String[] words = dto.getLocation().trim().split("\\s+");
+        String lastLocation = words[words.length - 1];
+
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
+        post.setCategory(dto.getCategory());
+        post.setBrandName(brandName);
+        post.setBenefitName(benefitName);
+        post.setPromiseDate(dto.getPromiseDate());
+        post.setLocation(lastLocation);
+
+        return PostResponseDto.of(post);
+    }
+
+
 }

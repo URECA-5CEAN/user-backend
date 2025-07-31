@@ -18,6 +18,7 @@ public enum ErrorCode {
     NOT_FOUND_USER1(20008, "NOT_FOUND_USER1","completed 파라미터가 null입니다. true 또는 false를 지정해주세요."),
     NOT_FOUND_USER2(20009, "NOT_FOUND_USER2","completed 값은 null일 수 없습니다."),
     NOT_FOUND_CHATROOM(20010, "NOT_FOUND_CHATROOM","채팅방을 찾을 수 없습니다."),
+    NOT_AUTHORIZED(20011,"NOT_AUTHORIZED","글을 삭제할 권한이 없습니다."),
     ;
 
     //map_backend : 30000

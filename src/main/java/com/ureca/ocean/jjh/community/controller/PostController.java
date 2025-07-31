@@ -97,4 +97,39 @@ public class PostController {
         List<PostResponseDto> postResponseDto = postServiceImpl.getMyPost(pageNo,criteria,email);
         return ResponseEntity.ok(BaseResponseDto.success(postResponseDto));
     }
+
+    @Operation(summary = "게시글 삭제", description = "게시글 ID를 통해 본인이 작성한 게시글을 삭제합니다.")
+    @DeleteMapping
+    public ResponseEntity<BaseResponseDto<?>> deletePost(
+            @Parameter(description = "Base64 인코딩된 사용자 이메일", hidden = true)
+            @RequestHeader("X-User-email") String encodedEmail,
+            @Parameter(description = "삭제할 게시글 ID", example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e")
+            @RequestParam UUID postId) {
+
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        postServiceImpl.deletePost(email, postId);
+        return ResponseEntity.ok(BaseResponseDto.success("게시글 삭제 성공"));
+    }
+
+    @Operation(summary = "게시글 수정", description = "게시글 ID를 통해 본인이 작성한 게시글을 수정합니다.")
+    @PutMapping
+    public ResponseEntity<BaseResponseDto<?>> updatePost(
+            @Parameter(description = "Base64 인코딩된 사용자 이메일", hidden = true)
+            @RequestHeader("X-User-email") String encodedEmail,
+
+            @Parameter(description = "수정할 게시글 ID", example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e")
+            @RequestParam UUID postId,
+
+            @RequestBody PostRequestDto postUpdateRequestDto) {
+
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        PostResponseDto updatedPost = postServiceImpl.updatePost(email, postId, postUpdateRequestDto);
+        return ResponseEntity.ok(BaseResponseDto.success(updatedPost));
+    }
+
+
+
+
 }
