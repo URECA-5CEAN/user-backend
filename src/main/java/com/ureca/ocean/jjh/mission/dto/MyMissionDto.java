@@ -24,9 +24,10 @@ public class MyMissionDto {
     private UUID missionConditionId;
     private String requireType;
     private int requireValue;
+    private int myValue;
 
     // MyMissions → MyMissionsDto 변환용 정적 메서드
-    public static MyMissionDto from(Mission mission, UserMission userMission, MissionCondition missionCondition) {
+    public static MyMissionDto from(Mission mission, UserMission userMission, MissionCondition missionCondition, int myValue) {
         return MyMissionDto.builder()
                 .missionId(userMission.getMission().getId())
                 .name(mission.getName())
@@ -35,9 +36,10 @@ public class MyMissionDto {
                 .completed(userMission.isCompleted())
                 .completedAt(userMission.getCompletedAt())
                 .createdAt(userMission.getCreatedAt())
-                .missionConditionId(missionCondition.getId())
-                .requireValue(missionCondition.getRequireValue())
-                .requireValue(missionCondition.getRequireValue())
+                .missionConditionId(missionCondition != null ? missionCondition.getId() : null)
+                .requireType(missionCondition != null ? missionCondition.getRequireType() : null)
+                .requireValue(missionCondition != null ? missionCondition.getRequireValue() : 1)
+                .myValue(myValue)
                 .build();
     }
 }

@@ -52,16 +52,33 @@ public class MissionServiceImpl implements MissionService {
             ? missionRepository.findUserMissionsByUserId(userId)
             : missionRepository.findUserMissionsByUserIdAndCompleted(userId, completed);
 
+        // 출석 여부 확인
+        List<Attendance> todayAttendance = attendanceRepository.findByUserIdAndDate(userId, LocalDate.now());
+
+        // 사용 내역 조회 (브랜드 방문 수 계산용)
+        List<StoreUsageDto> storeUsage = mapClient.getStoreUsageEmail(email);
+
         return userMissions.stream()
                 .map(um -> {
                     Mission mission = um.getMission();
                     MissionCondition condition = mission.getConditions().stream().findFirst().orElse(null);
-                    return MyMissionDto.from(mission, um, condition);
+
+                    int myValue = 0;
+                    String desc = mission.getDescription();
+
+                    if ("출석체크".equals(desc)) {
+                        myValue = !todayAttendance.isEmpty() ? 1 : 0;
+                    } else if (condition != null) {
+                        myValue = (int) storeUsage.stream()
+                                .filter(su -> desc.equals(su.getBrandName()))
+                                .count();
+                    }
+
+                    return MyMissionDto.from(mission, um, condition, myValue);
                 })
                 .toList();
     }
 
-    // ===================================================공사중===================================================
     @Override
     @Transactional
     public MissionCompleteDto getMissionComplete(String email, UUID missionId) {

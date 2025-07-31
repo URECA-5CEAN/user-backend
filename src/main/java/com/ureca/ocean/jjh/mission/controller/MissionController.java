@@ -32,7 +32,7 @@ public class MissionController {
         return ResponseEntity.ok(BaseResponseDto.success(userMissions));
     }
 
-    @Operation(summary = "내 미션 목록 조회", description = "[개발완료] 로그인 된 계정의 미션 목록을 가져온다.")
+    @Operation(summary = "내 미션 목록 조회", description = "[개발완료] 로그인 된 계정의 미션 목록을 가져온다. / 실시간으로 가져오기")
     @GetMapping("/mission/my")
     public ResponseEntity<BaseResponseDto<?>> getMyMissions(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
@@ -45,7 +45,7 @@ public class MissionController {
         return ResponseEntity.ok(BaseResponseDto.success(myMissions));
     }
 
-    @Operation(summary = "미션 완료", description = "[개발 중] 조건을 확인 -> 미션 완료 -> 경험치 추가")
+    @Operation(summary = "미션 완료", description = "[개발완료] 조건을 확인 -> 미션 완료 -> 경험치 추가")
     @GetMapping("/mission/complete")
     public ResponseEntity<BaseResponseDto<?>> getMissionComplete(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
