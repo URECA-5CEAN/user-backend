@@ -12,12 +12,17 @@ import com.ureca.ocean.jjh.mission.repository.MissionConditionRepository;
 import com.ureca.ocean.jjh.mission.repository.MissionRepository;
 import com.ureca.ocean.jjh.mission.repository.UserMissionRepository;
 import com.ureca.ocean.jjh.mission.service.MissionService;
+import com.ureca.ocean.jjh.user.entity.Attendance;
+import com.ureca.ocean.jjh.user.repository.AttendanceRepository;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -25,6 +30,7 @@ import java.util.UUID;
 public class MissionServiceImpl implements MissionService {
     private final MissionConditionRepository missionConditionRepository;
     private final UserMissionRepository userMissionRepository;
+    private final AttendanceRepository attendanceRepository;
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
 
@@ -56,6 +62,7 @@ public class MissionServiceImpl implements MissionService {
     @Override
     @Transactional
     public MissionCompleteDto getMissionComplete(String email, UUID missionId) {
+        // user mission 가져오기
         UUID userId = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER))
                 .getId();
@@ -65,16 +72,28 @@ public class MissionServiceImpl implements MissionService {
                 .findFirst()
                 .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_MISSION));
 
+        // 완료된 미션이면 exception
         if (userMission.isCompleted()) {
             throw new UserException(ErrorCode.ALREADY_COMPLETED);
         }
 
+        // 출석체크 미션
+        if(Objects.equals(userMission.getMission().getDescription(), "출석체크")){
+            List<Attendance> attendance = attendanceRepository.findByUserIdAndDate(userId, LocalDate.now());
+            if(!attendance.isEmpty()) {
+                userMission.setCompleted(true);
+                userMission.setCompletedAt(LocalDateTime.now());
+                return MissionCompleteDto.from(userMission);
+            }else{
+                throw new UserException(ErrorCode.ATTENDANCE_REQUIRE);
+            }
+        }
+
+        // 방문 미션
+
         userMission.setCompleted(true);
-        userMissionRepository.save(userMission);
+        userMission.setCompletedAt(LocalDateTime.now());
 
-        Mission mission = userMission.getMission();
-        MissionCondition condition = mission.getConditions().stream().findFirst().orElse(null);
-
-        return MissionCompleteDto.from(userMission, mission, condition);
+        return MissionCompleteDto.from(userMission);
     }
 }
