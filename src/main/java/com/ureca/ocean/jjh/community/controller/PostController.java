@@ -103,7 +103,7 @@ public class PostController {
     public ResponseEntity<BaseResponseDto<?>> deletePost(
             @Parameter(description = "Base64 인코딩된 사용자 이메일", hidden = true)
             @RequestHeader("X-User-email") String encodedEmail,
-            @Parameter(description = "삭제할 게시글 ID", example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e")
+            @Parameter(description = "삭제할 게시글 ID", example = "7391e17f-9f20-420e-ab75-e49af111b75a")
             @RequestParam UUID postId) {
 
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
@@ -118,7 +118,7 @@ public class PostController {
             @Parameter(description = "Base64 인코딩된 사용자 이메일", hidden = true)
             @RequestHeader("X-User-email") String encodedEmail,
 
-            @Parameter(description = "수정할 게시글 ID", example = "ccc0e0ca-ce19-4d99-9f98-e283e7f4102e")
+            @Parameter(description = "수정할 게시글 ID", example = "095ce195-971c-485b-8adc-af1c1c186fb4")
             @RequestParam UUID postId,
 
             @RequestBody PostRequestDto postUpdateRequestDto) {

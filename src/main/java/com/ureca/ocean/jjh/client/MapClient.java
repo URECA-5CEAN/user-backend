@@ -1,5 +1,6 @@
 package com.ureca.ocean.jjh.client;
 
+import com.ureca.ocean.jjh.client.dto.BrandDto;
 import com.ureca.ocean.jjh.common.BaseResponseDto;
 import com.ureca.ocean.jjh.common.constant.DomainConstant;
 import lombok.RequiredArgsConstructor;
@@ -32,16 +33,18 @@ public class MapClient {
     }
 
     //brandId로 brandName 가져오는 메서드
-    public String getBrandNameById(UUID brandId) {
+    public BrandDto getBrandNameById(UUID brandId) {
         String url = DomainConstant.MAP_URL + "api/map/brandNameById?id=" + brandId;
-        ResponseEntity<BaseResponseDto<String>> response = restTemplate.exchange(
+        ResponseEntity<BaseResponseDto<BrandDto>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<BaseResponseDto<String>>() {}
+                new ParameterizedTypeReference<BaseResponseDto<BrandDto>>() {}
         );
         return response.getBody().getData();
     }
+
+
 
     //benefitId로 benefitName 가져오는 메서드
     public String getBenefitNameById(UUID benefitId) {

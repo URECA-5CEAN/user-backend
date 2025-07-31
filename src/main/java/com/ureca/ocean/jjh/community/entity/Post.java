@@ -31,6 +31,7 @@ public class Post extends BaseEntity {
 
     private String category;
     private String brandName;
+    private String brandImgUrl;
     private String benefitName;
 
     private LocalDateTime promiseDate;

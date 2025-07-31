@@ -20,6 +20,7 @@ public class PostResponseDto {
     private UserResponseDto author;
     private String category;
     private String brandName;
+    private String brandImgUrl;
     private String benefitName;
     private LocalDateTime promiseDate;
 
@@ -34,6 +35,7 @@ public class PostResponseDto {
                 .location(post.getLocation())
                 .promiseDate(post.getPromiseDate())
                 .brandName(post.getBrandName())
+                .brandImgUrl (post.getBrandImgUrl())
                 .benefitName(post.getBenefitName())
                 .category(post.getCategory())
                 .author(UserResponseDto.of(post.getAuthor()))

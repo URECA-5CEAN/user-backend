@@ -2,6 +2,7 @@ package com.ureca.ocean.jjh.community.service.impl;
 
 
 import com.ureca.ocean.jjh.client.MapClient;
+import com.ureca.ocean.jjh.client.dto.BrandDto;
 import com.ureca.ocean.jjh.community.dto.response.PostResponseDto;
 import com.ureca.ocean.jjh.community.dto.request.PostRequestDto;
 import com.ureca.ocean.jjh.community.entity.Post;
@@ -39,7 +40,7 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
 
         //brand id를 넣으면 brand name을 갖고 오기
-        String brandName=mapClient.getBrandNameById(postRequestDto.getBrandId());
+        BrandDto brandDto=mapClient.getBrandNameById(postRequestDto.getBrandId());
 
         //혜택 id를 넣으면 혜택 name을 갖고 오기
         String benefitName=mapClient.getBenefitNameById(postRequestDto.getBenefitId());
@@ -52,7 +53,8 @@ public class PostServiceImpl implements PostService {
                         .content(postRequestDto.getContent())
                         .author(user)
                         .category(postRequestDto.getCategory())
-                        .brandName(brandName)
+                        .brandName(brandDto.getName())
+                        .brandImgUrl(brandDto.getImage_url())
                         .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
                         .location(words[words.length - 1])
@@ -81,6 +83,7 @@ public class PostServiceImpl implements PostService {
                             .category(post.getCategory())
                             .benefitName(post.getBenefitName())
                             .brandName(post.getBrandName())
+                            .brandImgUrl(post.getBrandImgUrl())
                             .promiseDate(post.getPromiseDate())
                             .build()
             );
@@ -113,6 +116,7 @@ public class PostServiceImpl implements PostService {
                         .category(post.getCategory())
                         .benefitName(post.getBenefitName())
                         .brandName(post.getBrandName())
+                        .brandImgUrl(post.getBrandImgUrl())
                         .promiseDate(post.getPromiseDate())
                         .build()
                     );
@@ -159,7 +163,7 @@ public class PostServiceImpl implements PostService {
             throw new UserException(ErrorCode.NOT_AUTHORIZED);
         }
 
-        String brandName = mapClient.getBrandNameById(dto.getBrandId());
+        BrandDto brandDto = mapClient.getBrandNameById(dto.getBrandId());
         String benefitName = mapClient.getBenefitNameById(dto.getBenefitId());
         String[] words = dto.getLocation().trim().split("\\s+");
         String lastLocation = words[words.length - 1];
@@ -167,7 +171,8 @@ public class PostServiceImpl implements PostService {
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
         post.setCategory(dto.getCategory());
-        post.setBrandName(brandName);
+        post.setBrandName(brandDto.getName());
+        post.setBrandImgUrl(brandDto.getImage_url());
         post.setBenefitName(benefitName);
         post.setPromiseDate(dto.getPromiseDate());
         post.setLocation(lastLocation);
