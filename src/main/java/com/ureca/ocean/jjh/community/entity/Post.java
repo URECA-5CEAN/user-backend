@@ -1,5 +1,6 @@
 package com.ureca.ocean.jjh.community.entity;
 
+import com.ureca.ocean.jjh.chat.entity.ChatRoom;
 import com.ureca.ocean.jjh.common.entity.BaseEntity;
 import com.ureca.ocean.jjh.user.entity.User;
 import jakarta.persistence.*;
@@ -7,6 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -38,4 +41,6 @@ public class Post extends BaseEntity {
 
     private String location;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 }

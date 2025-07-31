@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ureca.ocean.jjh.chat.dto.ChatMessageDto;
 import com.ureca.ocean.jjh.chat.repository.ChatMessageRepository;
+import com.ureca.ocean.jjh.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,12 @@ import java.time.LocalDateTime;
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // 채팅방 ID별로 연결된 세션을 관리
+
     private final Map<UUID, Set<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
+//    private final Map<UUID, WebSocketSession> userSession = new ConcurrentHashMap<>();
+//    private final Map<UUID, Set<Map<UUID, WebSocketSession>>> chatRooms = new ConcurrentHashMap<>();
+
+
     private final ChatMessageRepository chatMessageRepository;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -45,12 +51,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         if ("join".equals(type)) {
             // 채팅방에 세션만 등록하고 메시지는 보내지 않음
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
+//            userSession.putIfAbsent(userId, session);
             log.info(">> " + roomId + "에 " + session.getId() + " 입장");
         } else if ("chat".equals(type)) {
             // 메시지를 해당 채팅방의 모든 세션에 브로드캐스트
             log.info("broad cast");
-            chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가 ( join 메시지를 보내지 않고, 바로 채팅메시지만 보낼 경우 )
 
+
+            chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가 ( join 메시지를 보내지 않고, 바로 채팅메시지만 보낼 경우 )
             for (WebSocketSession s : chatRooms.get(roomId)) {
                 if (s.isOpen()) {
                     s.sendMessage(new TextMessage(message.getPayload()));
@@ -58,6 +66,21 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     chatMessageRepository.save(chatMessageDto);
                 }
             }
+
+
+
+//            userSession.putIfAbsent(userId, session);
+//            chatRooms.computeIfAbsent(roomId,k->ConcurrentHashMap.newKeySet()).add(userSession);
+//            for(Map<UUID, WebSocketSession> userInfos : chatRooms.get(roomId)){
+//                WebSocketSession s = userInfos.get(userId);
+//                if (s.isOpen()) {
+//                    s.sendMessage(new TextMessage(message.getPayload()));
+//                    ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now());
+//                    chatMessageRepository.save(chatMessageDto);
+//                }
+//            }
+
+
         }
     }
 

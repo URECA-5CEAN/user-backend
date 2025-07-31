@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,4 +25,8 @@ public class ChatRoom extends BaseEntity {
     @ManyToOne
     @JoinColumn(name= "post_id")
     private Post post;
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChatRoomUser> chatRoomUsers = new ArrayList<>();
+
 }
