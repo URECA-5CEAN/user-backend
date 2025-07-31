@@ -20,6 +20,7 @@ public enum ErrorCode {
     NOT_FOUND_MISSION(20010, "NOT_FOUND_MISSION","미션을 찾을 수 없습니다."),
     ALREADY_COMPLETED(20011, "ALREADY_COMPLETED","이미 완료된 미션입니다."),
     ATTENDANCE_REQUIRE(200012, "ATTENDANCE_REQUIRE","출석체크가 필요합니다."),
+    MISSION_NOT_COMPLETED(200013, "MISSION_NOT_COMPLETED","완료되지 않은 미션입니다."),
     ;
 
     //map_backend : 30000

@@ -2,6 +2,8 @@ package com.ureca.ocean.jjh.mission.service.impl;
 
 import com.ureca.ocean.jjh.exception.ErrorCode;
 import com.ureca.ocean.jjh.exception.UserException;
+import com.ureca.ocean.jjh.map.client.MapClient;
+import com.ureca.ocean.jjh.map.dto.StoreUsageDto;
 import com.ureca.ocean.jjh.mission.dto.MissionCompleteDto;
 import com.ureca.ocean.jjh.mission.dto.MissionWithConditionDto;
 import com.ureca.ocean.jjh.mission.dto.MyMissionDto;
@@ -33,6 +35,7 @@ public class MissionServiceImpl implements MissionService {
     private final AttendanceRepository attendanceRepository;
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
+    private final MapClient mapClient;
 
     @Override
     public List<MissionWithConditionDto> getAllMissions() {
@@ -90,10 +93,23 @@ public class MissionServiceImpl implements MissionService {
         }
 
         // 방문 미션
+        String brand = userMission.getMission().getDescription();
+        List<StoreUsageDto> storeUsage = mapClient.getStoreUsageEmail(email);
 
-        userMission.setCompleted(true);
-        userMission.setCompletedAt(LocalDateTime.now());
+        MissionCondition condition = userMission.getMission().getConditions().stream()
+                .findFirst()
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_MISSION));
 
-        return MissionCompleteDto.from(userMission);
+        long count = storeUsage.stream()
+                .filter(su -> brand.equals(su.getBrandName()))
+                .count();
+
+        if (count >= condition.getRequireValue()) {
+            userMission.setCompleted(true);
+            userMission.setCompletedAt(LocalDateTime.now());
+            return MissionCompleteDto.from(userMission);
+        } else {
+            throw new UserException(ErrorCode.MISSION_NOT_COMPLETED);
+        }
     }
 }

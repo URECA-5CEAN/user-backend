@@ -21,7 +21,7 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 @Service
-public class mapClient {
+public class MapClient {
     private final RestTemplate restTemplate;
 
     public List<StoreUsageDto> getStoreUsageEmail(String email) {

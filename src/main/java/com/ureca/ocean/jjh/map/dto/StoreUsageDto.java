@@ -2,6 +2,7 @@ package com.ureca.ocean.jjh.map.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,5 +15,6 @@ public class StoreUsageDto {
     private String storeId;
     private UUID benefitId;
     private LocalDateTime visitedAt;
+    private String brandName;
     private int benefitAmount;
 }
