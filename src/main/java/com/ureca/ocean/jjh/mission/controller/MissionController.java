@@ -45,7 +45,7 @@ public class MissionController {
         return ResponseEntity.ok(BaseResponseDto.success(myMissions));
     }
 
-    @Operation(summary = "미션 완료", description = "[개발 중] 미션 완료 처리한다.")
+    @Operation(summary = "미션 완료", description = "[개발 중] 조건을 확인 -> 미션 완료 -> 경험치 추가")
     @GetMapping("/mission/complete")
     public ResponseEntity<BaseResponseDto<?>> getMissionComplete(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,

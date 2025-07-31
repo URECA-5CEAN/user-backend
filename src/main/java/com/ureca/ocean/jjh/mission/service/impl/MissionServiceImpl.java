@@ -52,7 +52,7 @@ public class MissionServiceImpl implements MissionService {
                 .toList();
     }
 
-    // ========================================================공사중========================================================
+    // ===================================================공사중===================================================
     @Override
     @Transactional
     public MissionCompleteDto getMissionComplete(String email, UUID missionId) {
