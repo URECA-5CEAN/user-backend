@@ -49,7 +49,13 @@ public class UserStatusServiceImpl implements UserStatusService {
 //        Long expBound = ((beforeExp/50)+1) * 50;
 
         boolean levelChanged = false;
-        Long afterLevel = beforeLevel + afterExp/50;
+        Long afterLevel = 0L;
+        if(afterExp/50 > 0){
+             afterLevel = beforeLevel + afterExp/50;
+        }else{
+             afterLevel = beforeLevel + afterExp/50 - 1;
+        }
+
         userStatusFound.setLevel(afterLevel);
         if(!afterLevel.equals(beforeLevel)) levelChanged=true;
 
