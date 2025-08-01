@@ -1,6 +1,7 @@
 package com.ureca.ocean.jjh.mission.controller;
 
 import com.ureca.ocean.jjh.common.BaseResponseDto;
+import com.ureca.ocean.jjh.mission.dto.MissionCompleteDto;
 import com.ureca.ocean.jjh.mission.dto.MissionWithConditionDto;
 import com.ureca.ocean.jjh.mission.dto.MyMissionDto;
 import com.ureca.ocean.jjh.mission.service.MissionService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Mission", description = "미션 관련 API")
 @RequestMapping("api/user")
@@ -30,7 +32,7 @@ public class MissionController {
         return ResponseEntity.ok(BaseResponseDto.success(userMissions));
     }
 
-    @Operation(summary = "내 미션 목록 조회", description = "[개발 중] 로그인 된 계정의 미션 목록을 가져온다.")
+    @Operation(summary = "내 미션 목록 조회", description = "[개발완료] 로그인 된 계정의 미션 목록을 가져온다. / 실시간으로 가져오기")
     @GetMapping("/mission/my")
     public ResponseEntity<BaseResponseDto<?>> getMyMissions(
             @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
@@ -43,9 +45,15 @@ public class MissionController {
         return ResponseEntity.ok(BaseResponseDto.success(myMissions));
     }
 
-    @Operation(summary = "미션 완료", description = "[개발 중] 미션 완료 처리한다.")
+    @Operation(summary = "미션 완료", description = "[개발완료] 조건을 확인 -> 미션 완료 -> 경험치 추가")
     @GetMapping("/mission/complete")
-    public ResponseEntity<BaseResponseDto<?>> getMissionComplete() {
-        return ResponseEntity.ok(BaseResponseDto.success(""));
+    public ResponseEntity<BaseResponseDto<?>> getMissionComplete(
+            @Parameter(hidden = true) @RequestHeader("X-User-email") String encodedEmail,
+            @RequestParam UUID missionId
+    ) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        MissionCompleteDto missionComplete = missionService.getMissionComplete(email, missionId);
+
+        return ResponseEntity.ok(BaseResponseDto.success(missionComplete));
     }
 }
