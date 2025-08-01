@@ -28,10 +28,7 @@ import java.time.LocalDateTime;
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // 채팅방 ID별로 연결된 세션을 관리
-
     private final Map<UUID, Set<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
-//    private final Map<UUID, WebSocketSession> userSession = new ConcurrentHashMap<>();
-//    private final Map<UUID, Set<Map<UUID, WebSocketSession>>> chatRooms = new ConcurrentHashMap<>();
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -51,19 +48,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String type = payload.get("type");
         UUID roomId = UUID.fromString(payload.get("roomId"));
         UUID userId = UUID.fromString(payload.get("sender"));
-        User user = userRepository.findById(userId).orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
-        String name = user.getName();
-        System.out.println("type :" + type );
+        String name = userRepository.findById(userId).orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER)).getName();
+        log.info("type :" + type );
         if ("join".equals(type)) {
             // 채팅방에 세션만 등록하고 메시지는 보내지 않음
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
-//            userSession.putIfAbsent(userId, session);
             log.info(">> " + roomId + "에 " + session.getId() + " 입장");
         } else if ("chat".equals(type)) {
             // 메시지를 해당 채팅방의 모든 세션에 브로드캐스트
             log.info("broad cast");
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가 ( join 메시지를 보내지 않고, 바로 채팅메시지만 보낼 경우 )
-
+            //채팅 메시지 저장
+            ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now());
+            chatMessageRepository.save(chatMessageDto);
+            
             Map<String,String> payloadResponse = new HashMap<>();
             payloadResponse.put("roomId", roomId.toString());
             payloadResponse.put("sender", name);
@@ -72,28 +70,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             String json = objectMapper.writeValueAsString(payloadResponse);
             for (WebSocketSession s : chatRooms.get(roomId)) {
                 if (s.isOpen()) {
-
                     s.sendMessage(new TextMessage(json));
-//                    s.sendMessage(new TextMessage(message.getPayload()));
-                    ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now());
-                    chatMessageRepository.save(chatMessageDto);
                 }
             }
-
-
-
-//            userSession.putIfAbsent(userId, session);
-//            chatRooms.computeIfAbsent(roomId,k->ConcurrentHashMap.newKeySet()).add(userSession);
-//            for(Map<UUID, WebSocketSession> userInfos : chatRooms.get(roomId)){
-//                WebSocketSession s = userInfos.get(userId);
-//                if (s.isOpen()) {
-//                    s.sendMessage(new TextMessage(message.getPayload()));
-//                    ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now());
-//                    chatMessageRepository.save(chatMessageDto);
-//                }
-//            }
-
-
         }
     }
 

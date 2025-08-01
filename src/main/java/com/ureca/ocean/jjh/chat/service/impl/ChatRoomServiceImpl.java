@@ -54,6 +54,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                         .chatRoomId(chatRoom.getId())
                         .me(user.getId())
                         .other(author.getId())
+                        .post(chatRoom.getPost())
                         .build();
             }
         }
@@ -72,6 +73,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .chatRoomId(newChatRoom.getId())
                 .me(me.getUser().getId())
                 .other(authorChatRoomUser.getUser().getId())
+                .post(chatRoom.getPost())
                 .build();
     }
 
@@ -116,6 +118,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                         .me(me.getId())
                         .other(other.getUser().getId())
                         .chatRoomId(chatRoom.getId())
+                        .post(chatRoom.getPost())
                         .build()
                     );
         }
