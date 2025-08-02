@@ -31,7 +31,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final Map<UUID, Set<WebSocketSession>> chatRooms = new ConcurrentHashMap<>();
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
     private final ChatMessageRepository chatMessageRepository;
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
