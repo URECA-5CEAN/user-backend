@@ -28,7 +28,8 @@ public class DailyMissionScheduler {
     private final MissionRepository missionRepository;
     private final UserMissionRepository userMissionRepository;
 
-    @Scheduled(cron = "0 0 0 * * *") // 매일 자정
+    // UTC 기준 오후 3시 → 한국 시간 자정에 실행됨
+    @Scheduled(cron = "0 0 15 * * *")
     @Transactional
     public void refreshDailyMissions() {
         // 1. 전날 미션 삭제

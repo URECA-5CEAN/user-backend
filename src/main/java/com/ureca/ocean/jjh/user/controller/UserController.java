@@ -51,7 +51,7 @@ public class UserController {
     @Operation(summary = "이메일로 사용자 정보 조회")
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> getUserByEmail(
-            @Parameter(description = "사용자 이메일") @RequestParam String email) {
+            @Parameter(description = "사용자 이메일") @RequestParam(name = "email") String email) {
         UserResponseDtoWithPassword userResponseDtoWithPassword = userServiceImpl.getUserByEmail(email);
         if (userResponseDtoWithPassword.getId() == null) {
             return ResponseEntity.badRequest().body(BaseResponseDto.fail(ErrorCode.NOT_FOUND_USER));
