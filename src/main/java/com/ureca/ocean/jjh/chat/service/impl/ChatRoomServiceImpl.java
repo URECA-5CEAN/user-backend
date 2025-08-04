@@ -50,11 +50,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         for(ChatRoom chatRoom:chatRoomsBetweenMeAndOther){
             Post postCheck = chatRoom.getPost();
             if(post.getId() == postCheck.getId()){
-                return ChatRoomResponseDto.builder()
-                        .chatRoomId(chatRoom.getId())
-                        .me(user.getId())
-                        .other(author.getId())
-                        .build();
+                return ChatRoomResponseDto.from(chatRoom,user,author,post);
             }
         }
         ChatRoom chatRoom = ChatRoom.builder()
@@ -67,12 +63,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoomUser me = chatRoomUserRepository.save(ChatRoomUser.builder().user(user).chatRoom(newChatRoom).build());
         ChatRoomUser authorChatRoomUser = chatRoomUserRepository.save(ChatRoomUser.builder().user(author).chatRoom(newChatRoom).build());
 
-
-        return ChatRoomResponseDto.builder()
-                .chatRoomId(newChatRoom.getId())
-                .me(me.getUser().getId())
-                .other(authorChatRoomUser.getUser().getId())
-                .build();
+        return ChatRoomResponseDto.from(newChatRoom,me.getUser(),authorChatRoomUser.getUser(),post);
     }
 
     @Override
@@ -112,11 +103,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         for( ChatRoom chatRoom : chatRoomList){
             //채팅방에 소속돼있지만, 내가 아닌 사용자 즉, 상대방이 누구인지 추출
             ChatRoomUser other = chatRoomUserRepository.findByChatRoomButNotMe(chatRoom, me).orElseThrow(()-> new UserException(ErrorCode.NOT_FOUND_USER));
-            chatRoomResponseDtoList.add(ChatRoomResponseDto.builder()
-                        .me(me.getId())
-                        .other(other.getUser().getId())
-                        .chatRoomId(chatRoom.getId())
-                        .build()
+            chatRoomResponseDtoList.add(
+                    ChatRoomResponseDto.from(chatRoom,me,other.getUser(),chatRoom.getPost())
                     );
         }
 
