@@ -18,7 +18,6 @@ import com.ureca.ocean.jjh.mission.repository.UserMissionRepository;
 import com.ureca.ocean.jjh.user.entity.User;
 import com.ureca.ocean.jjh.user.repository.UserRepository;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,7 +30,6 @@ public class DailyMissionScheduler {
 
     // UTC 기준 오후 3시 → 한국 시간 자정에 실행됨
     @Scheduled(cron = "0 0 15 * * *")
-    @PostConstruct
     @Transactional
     public void refreshDailyMissions() {
         // 1. 기존 미션 삭제
