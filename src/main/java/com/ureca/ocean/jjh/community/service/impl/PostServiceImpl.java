@@ -46,8 +46,9 @@ public class PostServiceImpl implements PostService {
         String benefitName=mapClient.getBenefitNameById(postRequestDto.getBenefitId());
 
         //동 ( 마지막 단어 ) 만 저장
-        String[] words = postRequestDto.getLocation().trim().split("\\s+");
-        log.info(words[words.length - 1]);
+//        String[] words = postRequestDto.getLocation().trim().split("\\s+");
+//        log.info(words[words.length - 1]);
+        String location = mapClient.getStoreById(postRequestDto.getStoreId()).getAddress();
         Post post = Post.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
@@ -57,7 +58,7 @@ public class PostServiceImpl implements PostService {
                         .brandImgUrl(brandDto.getImage_url())
                         .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
-                        .location(words[words.length - 1])
+                        .location(location)
                         .build();
 
         Post newPost = postRepository.save(post);
@@ -150,35 +151,60 @@ public class PostServiceImpl implements PostService {
 
         postRepository.delete(post);
     }
-
     @Override
     public PostResponseDto updatePost(String email, UUID postId, PostRequestDto dto) {
+        // 사용자 조회
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
 
+        // 게시글 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND));
 
+        // 작성자 확인
         if (!post.getAuthor().getId().equals(user.getId())) {
             throw new UserException(ErrorCode.NOT_AUTHORIZED);
         }
 
-        BrandDto brandDto = mapClient.getBrandNameById(dto.getBrandId());
-        String benefitName = mapClient.getBenefitNameById(dto.getBenefitId());
-        String[] words = dto.getLocation().trim().split("\\s+");
-        String lastLocation = words[words.length - 1];
+        // 제목 업데이트
+        if (dto.getTitle() != null) {
+            post.setTitle(dto.getTitle());
+        }
 
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post.setCategory(dto.getCategory());
-        post.setBrandName(brandDto.getName());
-        post.setBrandImgUrl(brandDto.getImage_url());
-        post.setBenefitName(benefitName);
-        post.setPromiseDate(dto.getPromiseDate());
-        post.setLocation(lastLocation);
+        // 내용 업데이트
+        if (dto.getContent() != null) {
+            post.setContent(dto.getContent());
+        }
+
+        // 카테고리 업데이트
+        if (dto.getCategory() != null) {
+            post.setCategory(dto.getCategory());
+        }
+
+        // 브랜드 정보 업데이트
+        if (dto.getBrandId() != null) {
+            BrandDto brandDto = mapClient.getBrandNameById(dto.getBrandId());
+            post.setBrandName(brandDto.getName());
+            post.setBrandImgUrl(brandDto.getImage_url());
+        }
+
+        // 혜택 정보 업데이트
+        if (dto.getBenefitId() != null) {
+            String benefitName = mapClient.getBenefitNameById(dto.getBenefitId());
+            post.setBenefitName(benefitName);
+        }
+
+        // 약속 시간 업데이트
+        if (dto.getPromiseDate() != null) {
+            post.setPromiseDate(dto.getPromiseDate());
+        }
+
+        // 위치 정보 업데이트
+        if (dto.getStoreId() != null) {
+            String location = mapClient.getStoreById(dto.getStoreId()).getAddress();
+            post.setLocation(location);
+        }
 
         return PostResponseDto.of(post);
     }
-
-
 }
