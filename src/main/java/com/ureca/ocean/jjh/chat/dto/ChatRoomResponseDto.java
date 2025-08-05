@@ -24,6 +24,9 @@ public class ChatRoomResponseDto {
     @Schema(description = "상대방 사용자 ID")
     private UUID other;
 
+    @Schema(description = "상대방 사용자 닉네임")
+    private String otherNickname;
+
 
     private PostResponseDto postResponseDto;
     public static ChatRoomResponseDto from (ChatRoom chatRoom, User me, User other, Post post){
@@ -32,6 +35,7 @@ public class ChatRoomResponseDto {
                 .chatRoomId(chatRoom.getId())
                 .me(me.getId())
                 .other(other.getId())
+                .otherNickname(other.getNickname())
                 .postResponseDto(PostResponseDto.of(post))
                 .build();
 
