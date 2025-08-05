@@ -23,6 +23,7 @@ public enum ErrorCode {
     MISSION_NOT_COMPLETED(200013, "MISSION_NOT_COMPLETED","완료되지 않은 미션입니다."),
     NOT_FOUND_MISSION(20014, "NOT_FOUND_MISSION","미션을 찾을 수 없습니다."),
     ALREADY_COMPLETED(20015, "ALREADY_COMPLETED","이미 완료된 미션입니다."),
+    JUSO_CONVERT_FAIL(20016, "JUSO_CONVERT_FAIL","주소 변환중 오류 발생"),
     ;
 
     //map_backend : 30000

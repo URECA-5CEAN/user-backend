@@ -1,6 +1,7 @@
 package com.ureca.ocean.jjh.community.service.impl;
 
 
+import com.ureca.ocean.jjh.client.JusoClient;
 import com.ureca.ocean.jjh.client.MapClient;
 import com.ureca.ocean.jjh.client.dto.BrandDto;
 import com.ureca.ocean.jjh.community.dto.response.PostResponseDto;
@@ -33,6 +34,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final MapClient mapClient;
+    private final JusoClient jusoClient;
     @Override
     public PostResponseDto insertPost(String email, PostRequestDto postRequestDto){
 
@@ -41,14 +43,22 @@ public class PostServiceImpl implements PostService {
 
         //brand id를 넣으면 brand name을 갖고 오기
         BrandDto brandDto=mapClient.getBrandNameById(postRequestDto.getBrandId());
-
+        log.info(brandDto.toString());
         //혜택 id를 넣으면 혜택 name을 갖고 오기
         String benefitName=mapClient.getBenefitNameById(postRequestDto.getBenefitId());
+        log.info(benefitName);
 
         //동 ( 마지막 단어 ) 만 저장
-//        String[] words = postRequestDto.getLocation().trim().split("\\s+");
-//        log.info(words[words.length - 1]);
-        String location = mapClient.getStoreById(postRequestDto.getStoreId()).getAddress();
+        String roadAddrLocation = mapClient.getStoreById(postRequestDto.getStoreId()).getAddress();
+        String jibunAddrTilDong = roadAddrLocation;
+        try{
+            String jibunAddr = jusoClient.convertJuso(roadAddrLocation);
+            jibunAddrTilDong = jusoClient.extractAddrUpToDong(jibunAddr);
+            log.info(jibunAddr);
+        }catch(Exception e){
+            throw new UserException(ErrorCode.JUSO_CONVERT_FAIL);
+        }
+
         Post post = Post.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
@@ -58,7 +68,7 @@ public class PostServiceImpl implements PostService {
                         .brandImgUrl(brandDto.getImage_url())
                         .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
-                        .location(location)
+                        .location(jibunAddrTilDong)
                         .build();
 
         Post newPost = postRepository.save(post);

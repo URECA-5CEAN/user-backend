@@ -52,7 +52,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(BaseResponseDto.success(chatRoomResponseDtoList));
     }
 
-    @Operation(summary = "내 채팅방 목록 조회", description = "현재 로그인한 사용자가 참여 중인 모든 채팅방을 조회합니다.")
+    @Operation(summary = "채팅방 삭제", description = "채팅방을 삭제합니다.")
     @DeleteMapping
     public ResponseEntity<BaseResponseDto<?>> deleteChatRoom(
             @Parameter(hidden = true, description = "현재 로그인한 사용자의 이메일 (헤더에서 전달)") @RequestHeader("X-User-email") String encodedEmail,
