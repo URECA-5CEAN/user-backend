@@ -4,6 +4,7 @@ package com.ureca.ocean.jjh.community.service.impl;
 import com.ureca.ocean.jjh.client.JusoClient;
 import com.ureca.ocean.jjh.client.MapClient;
 import com.ureca.ocean.jjh.client.dto.BrandDto;
+import com.ureca.ocean.jjh.client.dto.StoreDto;
 import com.ureca.ocean.jjh.community.dto.response.PostResponseDto;
 import com.ureca.ocean.jjh.community.dto.request.PostRequestDto;
 import com.ureca.ocean.jjh.community.entity.Post;
@@ -49,7 +50,8 @@ public class PostServiceImpl implements PostService {
         log.info(benefitName);
 
         //동 ( 마지막 단어 ) 만 저장
-        String roadAddrLocation = mapClient.getStoreById(postRequestDto.getStoreId()).getAddress();
+        StoreDto store = mapClient.getStoreById(postRequestDto.getStoreId());
+        String roadAddrLocation = store.getAddress();
         String jibunAddrTilDong = roadAddrLocation;
         try{
             String jibunAddr = jusoClient.convertJuso(roadAddrLocation);
@@ -69,6 +71,9 @@ public class PostServiceImpl implements PostService {
                         .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
                         .location(jibunAddrTilDong)
+                        .storeName(store.getName())
+                        .storeLongitude(store.getLongitude())
+                        .storeLatitude(store.getLatitude())
                         .build();
 
         Post newPost = postRepository.save(post);
@@ -96,6 +101,9 @@ public class PostServiceImpl implements PostService {
                             .brandName(post.getBrandName())
                             .brandImgUrl(post.getBrandImgUrl())
                             .promiseDate(post.getPromiseDate())
+                            .storeName(post.getStoreName())
+                            .storeLatitude(post.getStoreLatitude())
+                            .storeLongitude(post.getStoreLongitude())
                             .build()
             );
         }
@@ -129,6 +137,9 @@ public class PostServiceImpl implements PostService {
                         .brandName(post.getBrandName())
                         .brandImgUrl(post.getBrandImgUrl())
                         .promiseDate(post.getPromiseDate())
+                        .storeName(post.getStoreName())
+                        .storeLatitude(post.getStoreLatitude())
+                        .storeLongitude(post.getStoreLongitude())
                         .build()
                     );
         }
@@ -211,8 +222,19 @@ public class PostServiceImpl implements PostService {
 
         // 위치 정보 업데이트
         if (dto.getStoreId() != null) {
-            String location = mapClient.getStoreById(dto.getStoreId()).getAddress();
-            post.setLocation(location);
+            StoreDto store = mapClient.getStoreById(dto.getStoreId());
+            String roadAddrLocation = store.getAddress();
+            String jibunAddrTilDong = roadAddrLocation;
+            try{
+                String jibunAddr = jusoClient.convertJuso(roadAddrLocation);
+                jibunAddrTilDong = jusoClient.extractAddrUpToDong(jibunAddr);
+                log.info(jibunAddr);
+            }catch(Exception e){
+                throw new UserException(ErrorCode.JUSO_CONVERT_FAIL);
+            }
+            post.setLocation(jibunAddrTilDong);
+            post.setStoreLatitude(store.getLatitude());
+            post.setStoreLongitude(store.getLongitude());
         }
 
         return PostResponseDto.of(post);

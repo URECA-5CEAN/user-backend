@@ -37,6 +37,10 @@ public class Post extends BaseEntity {
     private String brandImgUrl;
     private String benefitName;
 
+    private String storeName;
+    private Double storeLatitude;
+    private Double storeLongitude;
+
     private LocalDateTime promiseDate;
 
     private String location;

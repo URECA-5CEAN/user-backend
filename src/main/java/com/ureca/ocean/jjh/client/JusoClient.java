@@ -41,7 +41,7 @@ public class JusoClient {
         return response.toString();
     }
 
-    // 2. '동'만 추출 (emdNm 또는 jibunAddr 활용)
+    // '동'만 추출 (emdNm)
     public String extractAddrUpToDong(String jsonStr) throws Exception {
         JSONObject json = new JSONObject(jsonStr);
         JSONArray jusoArray = json.getJSONObject("results").getJSONArray("juso");
@@ -54,7 +54,6 @@ public class JusoClient {
             String sggNm = juso.getString("sggNm");   // 성북구
             String emdNm = juso.getString("emdNm");   // 안암동5가
 
-            // '가'나 숫자 등을 제거하고 '동'까지만 남기고 싶다면 여기에 추가 가공
             // 예: 안암동5가 → 안암동
             String dongOnly = emdNm.replaceAll("(동)[0-9가-힣]*$", "$1"); // ex. 안암동5가 → 안암동
 
