@@ -32,9 +32,8 @@ public class DailyMissionScheduler {
     @Scheduled(cron = "0 0 15 * * *")
     @Transactional
     public void refreshDailyMissions() {
-        // 1. 전날 미션 삭제
-        LocalDateTime todayStart = LocalDateTime.now().toLocalDate().atStartOfDay();
-        userMissionRepository.deleteByCreatedAtBefore(todayStart);
+        // 1. 기존 미션 삭제
+        userMissionRepository.deleteAll();
 
         // 2. 오늘 미션 생성
         List<Mission> allMissions = missionRepository.findAll();

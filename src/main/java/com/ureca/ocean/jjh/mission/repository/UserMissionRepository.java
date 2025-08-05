@@ -15,6 +15,5 @@ import java.util.UUID;
 public interface UserMissionRepository extends JpaRepository<UserMission, UUID> {
     List<UserMission> getUserMissionsByUserId(UUID userId);
     boolean existsByUserAndMission(User user, Mission mission);
-    void deleteByCreatedAtBefore(LocalDateTime dateTime);
 
 }
