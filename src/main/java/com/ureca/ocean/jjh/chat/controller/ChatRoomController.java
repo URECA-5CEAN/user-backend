@@ -51,4 +51,18 @@ public class ChatRoomController {
         List<ChatRoomResponseDto> chatRoomResponseDtoList = chatRoomService.getChatRoom(email);
         return ResponseEntity.ok(BaseResponseDto.success(chatRoomResponseDtoList));
     }
+
+    @Operation(summary = "채팅방 삭제", description = "채팅방을 삭제합니다.")
+    @DeleteMapping
+    public ResponseEntity<BaseResponseDto<?>> deleteChatRoom(
+            @Parameter(hidden = true, description = "현재 로그인한 사용자의 이메일 (헤더에서 전달)") @RequestHeader("X-User-email") String encodedEmail,
+            @Parameter(description = "삭제할 채팅방의 ID") @RequestParam UUID chatRoomId
+    ) {
+        String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
+        log.info("user-backend 내의 current userEmail : " + email);
+        chatRoomService.deleteChatRoom(email, chatRoomId);
+        return ResponseEntity.ok(BaseResponseDto.success(Void.class));
+    }
+
+
 }

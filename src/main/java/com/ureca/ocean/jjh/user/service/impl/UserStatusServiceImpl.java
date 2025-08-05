@@ -36,42 +36,38 @@ public class UserStatusServiceImpl implements UserStatusService {
     }
 
     @Override
-    public UserStatusResponseDto changeUserStatus(String email, Long expChange){
+    public UserStatusResponseDto changeUserStatus(String email, Long expChange) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new UserException(ErrorCode.NOT_FOUND_USER));
-        UserStatus userStatusFound = userStatusRepository.findById(user.getId()).orElseThrow(()->new UserException(ErrorCode.USER_STATUS_NOT_EXIST));
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
+        UserStatus userStatusFound = userStatusRepository.findById(user.getId())
+                .orElseThrow(() -> new UserException(ErrorCode.USER_STATUS_NOT_EXIST));
 
         Long beforeLevel = userStatusFound.getLevel();
-
         Long beforeExp = userStatusFound.getExp();
-        Long afterExp = beforeExp + expChange;
 
-//        Long expBound = ((beforeExp/50)+1) * 50;
+        // 총 경험치 계산
+        Long totalExp = beforeLevel * 50 + beforeExp + expChange;
 
-        boolean levelChanged = false;
-        Long afterLevel = 0L;
-        if(afterExp/50 > 0){
-             afterLevel = beforeLevel + afterExp/50;
-        }else{
-             afterLevel = beforeLevel + afterExp/50 - 1;
+        // 레벨과 잔여 경험치 재계산
+        Long newLevel = totalExp / 50;
+        Long newExp = totalExp % 50;
+
+        // 음수 경험치 보정
+        if (newExp < 0) {
+            newLevel -= 1;
+            newExp += 50;
         }
 
-        userStatusFound.setLevel(afterLevel);
-        if(!afterLevel.equals(beforeLevel)) levelChanged=true;
-
-        if(afterExp >= 0){
-            afterExp = afterExp % 50;
-        }else{
-            if(afterExp%50 ==0){
-                afterExp = 0L;
-            }else{
-                afterExp = 50 + afterExp % 50;
-            }
+        // 최저 레벨은 0
+        if (newLevel < 0) {
+            newLevel = 0L;
+            newExp = 0L;
         }
 
-        userStatusFound.setExp(afterExp);
+        boolean levelChanged = !newLevel.equals(beforeLevel);
 
-
+        userStatusFound.setLevel(newLevel);
+        userStatusFound.setExp(newExp);
         UserStatus userStatus = userStatusRepository.save(userStatusFound);
 
         return UserStatusResponseDto.builder()
@@ -81,5 +77,7 @@ public class UserStatusServiceImpl implements UserStatusService {
                 .isLevelUpdated(levelChanged)
                 .build();
     }
+
+
 
 }

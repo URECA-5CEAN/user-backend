@@ -12,4 +12,6 @@ public interface ChatRoomService {
     ChatRoomResponseDto insertChatRoom(String email, UUID postId);
 
     List<ChatRoomMessageResponseDto> getChatRoomMessages(UUID chatRoomId);
+
+    void deleteChatRoom(String email, UUID chatRoomId);
 }

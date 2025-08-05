@@ -15,6 +15,7 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ChatRoom extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")

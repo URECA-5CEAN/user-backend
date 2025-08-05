@@ -1,6 +1,7 @@
 package com.ureca.ocean.jjh.client;
 
 import com.ureca.ocean.jjh.client.dto.BrandDto;
+import com.ureca.ocean.jjh.client.dto.StoreDto;
 import com.ureca.ocean.jjh.common.BaseResponseDto;
 import com.ureca.ocean.jjh.common.constant.DomainConstant;
 import com.ureca.ocean.jjh.map.dto.StoreUsageDto;
@@ -25,7 +26,17 @@ import java.util.UUID;
 @Slf4j
 public class MapClient {
     private final RestTemplate restTemplate;
-
+    public StoreDto getStoreById(UUID storeId){
+        String url = DomainConstant.MAP_URL + "api/map/store/"+storeId;
+        log.info("url : "+ url);
+        ResponseEntity<BaseResponseDto<StoreDto>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<BaseResponseDto<StoreDto>>() {}
+        );
+        return response.getBody().getData();
+    }
     public List<String> getUserByEmail(String email) {
         String url = DomainConstant.MAP_URL + "api/map/brand?sortBy=asc";
         System.out.println("url : "+ url);

@@ -25,7 +25,9 @@ public class PostResponseDto {
     private LocalDateTime promiseDate;
 
     private String location;
-
+    private String storeName;
+    private Double storeLongitude;
+    private Double storeLatitude;
 
     public static PostResponseDto of(Post post) {
         return PostResponseDto.builder()
@@ -39,6 +41,9 @@ public class PostResponseDto {
                 .benefitName(post.getBenefitName())
                 .category(post.getCategory())
                 .author(UserResponseDto.of(post.getAuthor()))
+                .storeName(post.getStoreName())
+                .storeLatitude(post.getStoreLatitude())
+                .storeLongitude(post.getStoreLongitude())
                 .build();
     }
 }

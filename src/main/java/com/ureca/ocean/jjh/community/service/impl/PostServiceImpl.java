@@ -1,8 +1,10 @@
 package com.ureca.ocean.jjh.community.service.impl;
 
 
+import com.ureca.ocean.jjh.client.JusoClient;
 import com.ureca.ocean.jjh.client.MapClient;
 import com.ureca.ocean.jjh.client.dto.BrandDto;
+import com.ureca.ocean.jjh.client.dto.StoreDto;
 import com.ureca.ocean.jjh.community.dto.response.PostResponseDto;
 import com.ureca.ocean.jjh.community.dto.request.PostRequestDto;
 import com.ureca.ocean.jjh.community.entity.Post;
@@ -33,6 +35,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final MapClient mapClient;
+    private final JusoClient jusoClient;
     @Override
     public PostResponseDto insertPost(String email, PostRequestDto postRequestDto){
 
@@ -41,13 +44,23 @@ public class PostServiceImpl implements PostService {
 
         //brand id를 넣으면 brand name을 갖고 오기
         BrandDto brandDto=mapClient.getBrandNameById(postRequestDto.getBrandId());
-
+        log.info(brandDto.toString());
         //혜택 id를 넣으면 혜택 name을 갖고 오기
         String benefitName=mapClient.getBenefitNameById(postRequestDto.getBenefitId());
+        log.info(benefitName);
 
         //동 ( 마지막 단어 ) 만 저장
-        String[] words = postRequestDto.getLocation().trim().split("\\s+");
-        log.info(words[words.length - 1]);
+        StoreDto store = mapClient.getStoreById(postRequestDto.getStoreId());
+        String roadAddrLocation = store.getAddress();
+        String jibunAddrTilDong = roadAddrLocation;
+        try{
+            String jibunAddr = jusoClient.convertJuso(roadAddrLocation);
+            jibunAddrTilDong = jusoClient.extractAddrUpToDong(jibunAddr);
+            log.info(jibunAddr);
+        }catch(Exception e){
+            throw new UserException(ErrorCode.JUSO_CONVERT_FAIL);
+        }
+
         Post post = Post.builder()
                         .title(postRequestDto.getTitle())
                         .content(postRequestDto.getContent())
@@ -57,7 +70,10 @@ public class PostServiceImpl implements PostService {
                         .brandImgUrl(brandDto.getImage_url())
                         .benefitName(benefitName)
                         .promiseDate(postRequestDto.getPromiseDate())
-                        .location(words[words.length - 1])
+                        .location(jibunAddrTilDong)
+                        .storeName(store.getName())
+                        .storeLongitude(store.getLongitude())
+                        .storeLatitude(store.getLatitude())
                         .build();
 
         Post newPost = postRepository.save(post);
@@ -85,6 +101,9 @@ public class PostServiceImpl implements PostService {
                             .brandName(post.getBrandName())
                             .brandImgUrl(post.getBrandImgUrl())
                             .promiseDate(post.getPromiseDate())
+                            .storeName(post.getStoreName())
+                            .storeLatitude(post.getStoreLatitude())
+                            .storeLongitude(post.getStoreLongitude())
                             .build()
             );
         }
@@ -118,6 +137,9 @@ public class PostServiceImpl implements PostService {
                         .brandName(post.getBrandName())
                         .brandImgUrl(post.getBrandImgUrl())
                         .promiseDate(post.getPromiseDate())
+                        .storeName(post.getStoreName())
+                        .storeLatitude(post.getStoreLatitude())
+                        .storeLongitude(post.getStoreLongitude())
                         .build()
                     );
         }
@@ -150,35 +172,71 @@ public class PostServiceImpl implements PostService {
 
         postRepository.delete(post);
     }
-
     @Override
     public PostResponseDto updatePost(String email, UUID postId, PostRequestDto dto) {
+        // 사용자 조회
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
 
+        // 게시글 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND));
 
+        // 작성자 확인
         if (!post.getAuthor().getId().equals(user.getId())) {
             throw new UserException(ErrorCode.NOT_AUTHORIZED);
         }
 
-        BrandDto brandDto = mapClient.getBrandNameById(dto.getBrandId());
-        String benefitName = mapClient.getBenefitNameById(dto.getBenefitId());
-        String[] words = dto.getLocation().trim().split("\\s+");
-        String lastLocation = words[words.length - 1];
+        // 제목 업데이트
+        if (dto.getTitle() != null) {
+            post.setTitle(dto.getTitle());
+        }
 
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post.setCategory(dto.getCategory());
-        post.setBrandName(brandDto.getName());
-        post.setBrandImgUrl(brandDto.getImage_url());
-        post.setBenefitName(benefitName);
-        post.setPromiseDate(dto.getPromiseDate());
-        post.setLocation(lastLocation);
+        // 내용 업데이트
+        if (dto.getContent() != null) {
+            post.setContent(dto.getContent());
+        }
+
+        // 카테고리 업데이트
+        if (dto.getCategory() != null) {
+            post.setCategory(dto.getCategory());
+        }
+
+        // 브랜드 정보 업데이트
+        if (dto.getBrandId() != null) {
+            BrandDto brandDto = mapClient.getBrandNameById(dto.getBrandId());
+            post.setBrandName(brandDto.getName());
+            post.setBrandImgUrl(brandDto.getImage_url());
+        }
+
+        // 혜택 정보 업데이트
+        if (dto.getBenefitId() != null) {
+            String benefitName = mapClient.getBenefitNameById(dto.getBenefitId());
+            post.setBenefitName(benefitName);
+        }
+
+        // 약속 시간 업데이트
+        if (dto.getPromiseDate() != null) {
+            post.setPromiseDate(dto.getPromiseDate());
+        }
+
+        // 위치 정보 업데이트
+        if (dto.getStoreId() != null) {
+            StoreDto store = mapClient.getStoreById(dto.getStoreId());
+            String roadAddrLocation = store.getAddress();
+            String jibunAddrTilDong = roadAddrLocation;
+            try{
+                String jibunAddr = jusoClient.convertJuso(roadAddrLocation);
+                jibunAddrTilDong = jusoClient.extractAddrUpToDong(jibunAddr);
+                log.info(jibunAddr);
+            }catch(Exception e){
+                throw new UserException(ErrorCode.JUSO_CONVERT_FAIL);
+            }
+            post.setLocation(jibunAddrTilDong);
+            post.setStoreLatitude(store.getLatitude());
+            post.setStoreLongitude(store.getLongitude());
+        }
 
         return PostResponseDto.of(post);
     }
-
-
 }

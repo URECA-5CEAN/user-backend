@@ -32,5 +32,5 @@ public class PostRequestDto {
     private LocalDateTime promiseDate;
 
     @Schema(description = "위치", example = "서울시 강남구 역삼동")
-    private String location;
+    private UUID StoreId;
 }
