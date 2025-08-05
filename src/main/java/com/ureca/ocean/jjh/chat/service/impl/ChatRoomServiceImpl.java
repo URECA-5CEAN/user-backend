@@ -55,7 +55,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             log.info("같은 사용자 간의 채팅방이 존재합니다. 그 채팅방의 POSTID도 동일한지 확인합니다.");
             for(ChatRoom chatRoom:chatRoomsBetweenMeAndOther){
                 Post postCheck = chatRoom.getPost();
-                log.info(chatRoomsBetweenMeAndOther.get(0).toString() + " " + chatRoomsBetweenMeAndOther.get(1).toString());
+                log.info("chatRoom정보 입니다 :" + chatRoom.toString());
                 log.info("각각의 postid입니다. 첫번째는 새로 생성하는 post , 뒤는 기존 사용자 간의 post" + post.getId() + ", " + postCheck.getId());
                 if(post.getId() == postCheck.getId()){
                     return ChatRoomResponseDto.from(chatRoom,user,author,post);
