@@ -30,4 +30,6 @@ public interface ChatRoomUserRepository  extends JpaRepository<ChatRoomUser, Cha
     """)
     List<ChatRoom> findCommonChatRooms(User me, User other);
 
+    ChatRoomUser findByChatRoomAndUser(ChatRoom chatRoom, User user);
+
 }

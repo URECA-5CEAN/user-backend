@@ -19,10 +19,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -120,6 +118,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         }
 
         return chatRoomResponseDtoList;
+    }
+
+    @Override
+    public void deleteChatRoom(String email, UUID chatRoomId){
+        User me = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_USER));
+
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new UserException(ErrorCode.NOT_FOUND_CHATROOM));
+        ChatRoomUser chatRoomUser = chatRoomUserRepository.findByChatRoomAndUser(chatRoom, me);
+        if(!chatRoom.getChatRoomUsers().contains(chatRoomUser)){
+            log.info("삭제하려는 사용자가 해당 채팅방과 관계 없습니다. 삭제를 금지합니다.");
+            throw new UserException(ErrorCode.NOT_AUTHORIZED);
+        }
+        chatRoomRepository.deleteById(chatRoomId);
+        log.info("삭제 완료 : " + chatRoomId);
     }
 
 
