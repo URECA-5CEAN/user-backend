@@ -20,6 +20,6 @@ public interface ChatRoomUserRepository  extends JpaRepository<ChatRoomUser, Cha
     @Query("SELECT c FROM ChatRoomUser c WHERE c.user != :me AND c.chatRoom = :chatRoom")
     Optional<ChatRoomUser> findByChatRoomButNotMe(ChatRoom chatRoom, User me);
 
-    @Query("SELECT DISTINCT c.chatRoom FROM ChatRoomUser c WHERE c.user =:me OR c.user =:other")
+    @Query("SELECT DISTINCT c.chatRoom FROM ChatRoomUser c WHERE c.user =:me AND c.user =:other")
     List<ChatRoom> findByParticipants(User me, User other);
 }
