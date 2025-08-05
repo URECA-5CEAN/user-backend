@@ -48,17 +48,20 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         //상대방 사용자
         User author = post.getAuthor();
 
-        List<ChatRoom> chatRoomsBetweenMeAndOther = chatRoomUserRepository.findByParticipants(user,author);
-        if(!chatRoomsBetweenMeAndOther.isEmpty()){
+        List<ChatRoom> chatRoomsBetweenMeAndOther = chatRoomUserRepository.findCommonChatRooms(user,author);
+        if(chatRoomsBetweenMeAndOther.isEmpty()){
             log.info("채팅방이 새로 만들어집니다.");
         }else{
             log.info("같은 사용자 간의 채팅방이 존재합니다. 그 채팅방의 POSTID도 동일한지 확인합니다.");
             for(ChatRoom chatRoom:chatRoomsBetweenMeAndOther){
                 Post postCheck = chatRoom.getPost();
+                log.info(chatRoomsBetweenMeAndOther.get(0).toString() + " " + chatRoomsBetweenMeAndOther.get(1).toString());
+                log.info("각각의 postid입니다. 첫번째는 새로 생성하는 post , 뒤는 기존 사용자 간의 post" + post.getId() + ", " + postCheck.getId());
                 if(post.getId() == postCheck.getId()){
                     return ChatRoomResponseDto.from(chatRoom,user,author,post);
                 }
             }
+            log.info("같은 채팅방은 있지만, post가 다릅니다. 채팅방이 새로 만들어집니다.");
         }
 
         ChatRoom chatRoom = ChatRoom.builder()

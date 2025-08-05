@@ -50,9 +50,4 @@ public class User extends BaseEntity {
     @Column(name = "title")
     private String title;
 
-    public static String getDong(String address){
-        String[] words = address.trim().split("\\s+");  // 연속된 공백도 처리
-        return words[words.length - 1];
-    }
-
 }
