@@ -45,7 +45,8 @@ public class ChatRoomController {
     @Operation(summary = "내 채팅방 목록 조회", description = "현재 로그인한 사용자가 참여 중인 모든 채팅방을 조회합니다.")
     @GetMapping
     public ResponseEntity<BaseResponseDto<?>> getMyChatRooms(
-            @Parameter(hidden = true, description = "현재 로그인한 사용자의 이메일 (헤더에서 전달)") @RequestHeader("X-User-email") String encodedEmail) {
+            @Parameter(hidden = true, description = "현재 로그인한 사용자의 이메일 (헤더에서 전달)") @RequestHeader("X-User-email") String encodedEmail
+    ) {
         String email = URLDecoder.decode(encodedEmail, StandardCharsets.UTF_8);
         log.info("user-backend 내의 current userEmail : " + email);
         List<ChatRoomResponseDto> chatRoomResponseDtoList = chatRoomService.getChatRoom(email);
