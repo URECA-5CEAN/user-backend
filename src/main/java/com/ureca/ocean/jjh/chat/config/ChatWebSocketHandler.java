@@ -16,6 +16,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             log.info("broad cast");
             chatRooms.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session); // 혹시 모르니 추가 ( join 메시지를 보내지 않고, 바로 채팅메시지만 보낼 경우 )
             //채팅 메시지 저장
-            ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now());
+            ChatMessageDto chatMessageDto = new ChatMessageDto(messageContent,roomId,userId,LocalDateTime.now(ZoneId.of("Asia/Seoul")));
             chatMessageRepository.save(chatMessageDto);
             
             Map<String,String> payloadResponse = new HashMap<>();
