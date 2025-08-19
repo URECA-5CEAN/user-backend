@@ -1,12 +1,13 @@
 # 빌드
+#빌드 타임 이미지
 FROM gradle:8.5-jdk17 AS builder
 WORKDIR /app
 COPY . .
 RUN chmod +x ./gradlew
-RUN ./gradlew clean bootJar -x test
-#RUN ./gradlew clean build -x test
+RUN ./gradlew clean bootJar -x test #bootJar : plainJar 빼고 fatJar (실행에 필요한 것만) 포함하여 build
 
-# 런타임 이미지
+#실행
+#런타임 이미지
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
