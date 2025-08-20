@@ -45,12 +45,12 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PW }}
 
       - name: Build and Push Docker Image
-        run: |
-          docker build -t ureca-final-project-dockerhub/user-backend-image:${{github.sha}} .
-          docker push ureca-final-project-dockerhub/user-backend-image:${{ github.sha }}
+        run: |    
+          docker build -t jmk445/ureca-final-project-user-backend:${{github.sha}} .         
+          docker push jmk445/ureca-final-project-user-backend:${{ github.sha }}
 
       - name: Save EC2 SSH key
         run: |
@@ -58,9 +58,10 @@ jobs:
           chmod 400 key.pem
 
       - name: Deploy JAR to EC2 and Run
-        run: |
-        # todo : ec2 접속 해서
-          docker pull my-dockerhub/my-app:${{ github.sha }}
-          docker stop my-app || true
-          docker rm my-app || true
-          docker run -d --name my-app -p 8082:8082 ureca-final-project-dockerhub/user-backend-image:${{ github.sha }}
+        run: |      
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          docker pull jmk445/ureca-final-project-user-backend:${{ github.sha }}
+          docker stop ureca-final-project-user-backend || true
+          docker rm ureca-final-project-user-backend || true
+          docker run -d --name ureca-final-project-user-backend -p 8082:8082 jmk445/ureca-final-project-user-backend:${{ github.sha }}
+          EOF
