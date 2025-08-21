@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - v2
     # v2 도 만들어야함.
 jobs:
   test:
