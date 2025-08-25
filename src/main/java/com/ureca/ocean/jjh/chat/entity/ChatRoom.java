@@ -27,6 +27,6 @@ public class ChatRoom extends BaseEntity {
     private Post post;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ChatRoomUser> chatRoomUsers = new ArrayList<>();
+    private List<ChatRoomUser> chatRoomUsers;
 
 }

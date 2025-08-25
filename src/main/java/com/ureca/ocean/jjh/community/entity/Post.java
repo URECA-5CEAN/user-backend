@@ -42,5 +42,5 @@ public class Post extends BaseEntity {
     private String location;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ChatRoom> chatRooms = new ArrayList<>();
+    private List<ChatRoom> chatRooms;
 }
