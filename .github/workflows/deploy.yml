@@ -39,6 +39,10 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
+      - name: Create application-secret.properties
+        run: |
+          echo "${{ secrets.APPLICATION_SECRET_PROPERTIES }}" > src/main/resources/application-secret.properties
+
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
