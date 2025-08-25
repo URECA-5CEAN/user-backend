@@ -59,7 +59,6 @@ jobs:
 
       - name: Deploy to EC2 via SSM
         run: |
-#          COMMAND_ID=$()
           aws ssm send-command \
             --targets "Key=instanceIds,Values=${{ secrets.AWS_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
@@ -72,5 +71,3 @@ jobs:
             ]' \
             --query "Command.CommandId" \
             --output text
-
-#          echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
