@@ -59,7 +59,8 @@ jobs:
 
       - name: Deploy to EC2 via SSM
         run: |
-          COMMAND_ID=$(aws ssm send-command \
+#          COMMAND_ID=$()
+          aws ssm send-command \
             --targets "Key=instanceIds,Values=${{ secrets.AWS_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy new Docker image" \
@@ -70,6 +71,6 @@ jobs:
               "docker run -d --name ureca-final-project-user-backend -p 8082:8082 jmk445/ureca-final-project-user-backend:${{ github.sha }}"
             ]' \
             --query "Command.CommandId" \
-            --output text)
+            --output text
 
-          echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
+#          echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
