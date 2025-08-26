@@ -34,7 +34,7 @@ jobs:
   deploy:
     name: Build Docker JAR and Deploy to EC2
     runs-on: ubuntu-latest
-#    needs: test
+    needs: test
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
